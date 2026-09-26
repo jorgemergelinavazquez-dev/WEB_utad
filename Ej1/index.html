@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>El Oráculo de los Números</title>
+    <!-- conexion js y html, defer para primero descargar y despues ejecutar -->
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <h1>El oráculo de los números</h1>
+    <p>Adivina el número secreto (entre 1 y 100).</p>
+    
+    <!-- input=campo interactipo, placeholder texto fantasma-->
+    <input type="number" id="numero-input" placeholder="Ej: 50">
+    <!-- texto visible "Consultar"-->
+    <button id="adivinar-btn">Consultar</button>
+    
+    <p id="mensaje-texto"></p>
+    <p id="marcador-texto">Intentos: 0</p>
+</body>
+</html>
