@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Módulo 1 - Web U-tad</title>
+    <!-- Conectamos la hoja de estilos -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Conectamos la lógica del juego/aplicación -->
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Caza al Bug</h1>
+        <div id="marcador">
+            <p>Puntuación: <span id="puntos">0</span></p>
+            <p>Tiempo: <span id="tiempo">30</span>s</p>
+        </div>
+        <button id="btn-iniciar">Iniciar Partida</button>
+    </header>
+
+    <main>
+        <!-- Contenedor del tablero 3x3 -->
+        <div id="tablero">
+            <!-- Las 9 casillas. Les pongo la clase 'casilla' a todas -->
+            <div class="casilla" id="c0"></div>
+            <div class="casilla" id="c1"></div>
+            <div class="casilla" id="c2"></div>
+            <div class="casilla" id="c3"></div>
+            <div class="casilla" id="c4"></div>
+            <div class="casilla" id="c5"></div>
+            <div class="casilla" id="c6"></div>
+            <div class="casilla" id="c7"></div>
+            <div class="casilla" id="c8"></div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* Estilos generales para centrar el contenido */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#marcador {
+    display: flex;
+    gap: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#btn-iniciar {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* El tablero 3x3 usando Grid */
+#tablero {
+    display: grid;
+    /* Creamos 3 columnas del mismo tamaño */
+    grid-template-columns: repeat(3, 100px);
+    /* Creamos 3 filas del mismo tamaño */
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px; /* Espacio entre casillas */
+}
+
+/* Estilo base de cada casilla vacía */
+.casilla {
+    background-color: #ddd;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+    cursor: pointer;
+    /* Para centrar el bicho si usamos un emoji o imagen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem; 
+}
+
+/* ESTA ES LA CLASE CLAVE */
+/* Representa cómo se ve una casilla cuando tiene el bug */
+.casilla.bug-activo {
+    background-color: #ffcccc;
+}
+/* Usamos el pseudo-elemento ::after para pintar el bicho solo usando CSS */
+.casilla.bug-activo::after {
+    content: "🐛"; 
+}
