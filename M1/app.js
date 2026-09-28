@@ -1,112 +1,116 @@
-//  Seleccionamos todas las casillas del tablero
+// 1. Selección de elementos del DOM
 const casillas = document.querySelectorAll('.casilla');
-
-// Variables de estado para saber dónde está el bug y controlar el tiempo
-let posicionActual = null;
-let temporizadorBug = null;
-
-// constantes sobre el tiempo y estado de partida
+const displayPuntos = document.querySelector('#puntos');
 const displayTiempo = document.querySelector('#tiempo');
 const btnIniciar = document.querySelector('#btn-iniciar');
+const displayRecord = document.querySelector('#record'); 
 
-// Nuevas variables de estado para el tiempo y el control del juego
+// 2. Variables de estado
+let puntuacion = 0;
 let tiempoRestante = 30;
+let temporizadorBug = null;
 let temporizadorCuentaAtras = null;
 let juegoActivo = false;
+let posicionActual = null;
+let puntuacionMaxima = 0; 
 
-//  Función principal de movimiento
+// 3. Función para mover el bug aleatoriamente
 function moverBug() {
-    // Limpiamos la clase 'bug-activo' de todas las casillas iterando sobre ellas
+    // Limpiar rastro anterior
     casillas.forEach(casilla => {
         casilla.classList.remove('bug-activo');
     });
 
-    // Generamos un número aleatorio entre 0 y 8 (los índices de nuestras 9 casillas)
+    // Elegir nueva casilla
     const indiceAleatorio = Math.floor(Math.random() * 9);
     const casillaAleatoria = casillas[indiceAleatorio];
 
-    // Le añadimos la clase que muestra el bicho al elemento seleccionado
+    // Pintar el bug y guardar su posición
     casillaAleatoria.classList.add('bug-activo');
-
-    // Guardamos el id de esta casilla en el estado para poder comprobar los aciertos luego
     posicionActual = casillaAleatoria.id;
 }
 
-//  Función para arrancar el bucle temporal
-function iniciarJuego() {
-    // Reiniciamos los marcadores por si es la segunda partida
-    puntuacion = 0;
-    tiempoRestante = 30;
-    displayPuntos.textContent = puntuacion;
-    displayTiempo.textContent = tiempoRestante;
-    
-    // Cambiamos el estado y bloqueamos el botón para que no se pulse varias veces
-    juegoActivo = true;
-    btnIniciar.disabled = true;
-    
-    // Arrancamos el salto del bug (como en la fase 2) y el reloj
-    temporizadorBug = setInterval(moverBug, 800);
-    temporizadorCuentaAtras = setInterval(actualizarReloj, 1000);
-}
-
-//  Función para ir restando segundos
+// 4. Función para actualizar el reloj
 function actualizarReloj() {
     tiempoRestante--;
     displayTiempo.textContent = tiempoRestante;
     
-    // Comprobamos si se ha acabado el tiempo
+    // Comprobar fin de partida
     if (tiempoRestante <= 0) {
         finalizarJuego();
     }
 }
 
-//  Función para detener todo
+// 5. Función para iniciar la partida
+function iniciarJuego() {
+    // Reiniciar marcadores y estado
+    puntuacion = 0;
+    tiempoRestante = 30;
+    displayPuntos.textContent = puntuacion;
+    displayTiempo.textContent = tiempoRestante;
+    
+    juegoActivo = true;
+    btnIniciar.disabled = true; // Evitar múltiples clics
+    
+    // Iniciar temporizadores
+    temporizadorBug = setInterval(moverBug, 800);
+    temporizadorCuentaAtras = setInterval(actualizarReloj, 1000);
+}
+
+// 6. Función para detener la partida
 function finalizarJuego() {
     juegoActivo = false;
     
-    // clearInterval detiene los bucles temporales usando la variable donde los guardamos
+    // Detener bucles de tiempo
     clearInterval(temporizadorBug);
     clearInterval(temporizadorCuentaAtras);
     
-    // Limpiamos el tablero
+    // Limpiar tablero
     casillas.forEach(casilla => casilla.classList.remove('bug-activo'));
     posicionActual = null;
     
-    // Volvemos a activar el botón por si quiere jugar otra vez
+    // --- NUEVA LÓGICA DEL RÉCORD ---
+    // Si la puntuación actual es mayor que el récord, lo actualizamos
+    if (puntuacion > puntuacionMaxima) {
+        puntuacionMaxima = puntuacion;
+        displayRecord.textContent = puntuacionMaxima;
+    }
+    
+    // Reactivar botón para jugar de nuevo
     btnIniciar.disabled = false;
     
-    // Un pequeño aviso visual de fin de partida
+    // Mostrar puntuación final
     setTimeout(() => {
-        alert(`¡Fin del tiempo! Has cazado ${puntuacion} bugs.`);
+        alert(`¡Fin del tiempo! Has conseguido ${puntuacion} puntos.`);
     }, 100);
 }
 
-//  Enganchamos el evento al botón
-btnIniciar.addEventListener('click', iniciarJuego);
-
-// Llamamos a la función directamente para probar esta fase
-iniciarJuego();
-
-//Seleccionamos el elemento del DOM donde mostraremos los puntos
-const displayPuntos = document.querySelector('#puntos');
-let puntuacion = 0; // Nueva variable de estado para guardar los puntos
-
-//Añadimos el evento de clic a cada una de las casillas
+// 7. Eventos de clic en el tablero (lógica de aciertos y fallos)
 casillas.forEach(casilla => {
     casilla.addEventListener('click', () => {
-        
-        //Comprobamos si la casilla en la que hemos hecho clic es la que tiene el bug
+        if (!juegoActivo) return; // Si el juego no ha empezado, no hacer nada
+
         if (casilla.id === posicionActual) {
-            // Sumamos un punto
+            // Acierto
             puntuacion++;
-            
-            //Actualizamos el texto en el HTML
-            displayPuntos.textContent = puntuacion;
-            
-            // Quitamos el bug inmediatamente para que el jugador no pueda 
-            // hacer doble clic y sumar más puntos en la misma aparición
-            casilla.classList.remove('bug-activo');
+            casilla.classList.remove('bug-activo'); // Quitar el bug para evitar doble clic
             posicionActual = null; 
+        } else {
+            // Fallo (penalización)
+            puntuacion -= 2; 
         }
+        
+        // Actualizar pantalla
+        displayPuntos.textContent = puntuacion;
     });
+});
+
+// 8. Evento del botón de inicio
+btnIniciar.addEventListener('click', iniciarJuego);
+
+// 9. Bonus: Evento de teclado para activar el modo oscuro
+document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'n' || evento.key === 'N') {
+        document.body.classList.toggle('modo-oscuro');
+    }
 });

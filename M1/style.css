@@ -59,3 +59,39 @@ header {
 .casilla.bug-activo::after {
     content: "🐛"; 
 }
+
+/* Cuando el body tiene la clase modo-oscuro, cambiamos el fondo y el texto */
+body.modo-oscuro {
+    background-color: #1a1a1a;
+    color: #f4f4f4;
+}
+
+/* Oscurecemos también las casillas vacías */
+body.modo-oscuro .casilla {
+    background-color: #333;
+    border-color: #555;
+}
+
+/* Le damos un tono diferente a la casilla del bug para que resalte más en la oscuridad */
+body.modo-oscuro .casilla.bug-activo {
+    background-color: #6b1414;
+}
+
+/* Cambiamos el color del botón cuando el modo oscuro está activo */
+body.modo-oscuro #btn-iniciar {
+    background-color: #444; /* Fondo gris oscuro */
+    color: #f4f4f4;       /* Texto claro */
+    border: 1px solid #777; /* Borde más sutil */
+}
+
+/* Opcional: Un pequeño efecto al pasar el ratón por encima en modo oscuro */
+body.modo-oscuro #btn-iniciar:not(:disabled):hover {
+    background-color: #555;
+}
+
+/* Hacemos que el número del récord destaque siempre en dorado */
+#record {
+    color: #d4af37; 
+    font-weight: bold;
+    font-size: 1.3rem;
+}
