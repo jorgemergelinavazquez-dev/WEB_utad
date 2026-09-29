@@ -1,6 +1,9 @@
 # Caza al Bug
 Misión M1 El Despertar del DOM - Web Development I.
 
+## Descripción del Proyecto
+"Caza al Bug" es un mini-juego arcade interactivo desarrollado exclusivamente con HTML, CSS y JavaScript. Basado en la mecánica del clásico *whack-a-mole*, el objetivo es poner a prueba los reflejos del jugador, que deberá hacer clic sobre un escurridizo bug que salta de forma aleatoria por una cuadrícula de 3x3 antes de que el reloj llegue a cero.
+
 ## Cómo probarlo
 Abre `index.html` en el navegador (o con Live Server). Pulsa el botón "Iniciar Partida": tienes 30 segundos para cazar los bugs haciendo clic sobre ellos. 
 * Mecánica de puntuación: Cada acierto suma 1 punto, pero fallar y hacer clic en una casilla vacía resta 2 puntos. 
