@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Async Odyssey - TheMealDB</title>
-    <!-- Opcional: enlace a tus estilos -->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <header>
@@ -17,23 +16,18 @@
     </header>
 
     <main>
-        <!-- Estado de carga: visible mientras se hace el fetch -->
-        <div id="loading" style="display: none;">
+        <div id="loading">
             <p>Cargando recetas... ⏳</p>
         </div>
 
-        <!-- Estado de error: visible si la petición falla o no hay resultados -->
-        <div id="error" style="display: none; color: red;">
+        <div id="error">
             <p id="errorMessage">Ha ocurrido un error.</p>
         </div>
 
-        <!-- Contenedor donde renderizaremos los datos transformados -->
         <div id="results">
-            <!-- Los elementos se inyectarán aquí con JavaScript -->
         </div>
     </main>
 
-    <!-- ¡Muy importante! type="module" para cumplir con el requisito de Módulos ES -->
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

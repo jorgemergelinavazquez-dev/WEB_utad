@@ -1,0 +1,98 @@
+body {
+    font-family: system-ui, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+#searchForm {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+input {
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: white;
+    width: 70%;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #facc15;
+    color: #121212;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #eab308;
+}
+
+#results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.meal-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.meal-card:hover {
+    transform: translateY(-5px);
+}
+
+.meal-card img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.meal-card h2 {
+    font-size: 1.25rem;
+    margin: 1rem 0 0.5rem 0;
+    color: #facc15;
+}
+
+.meal-card p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+#loading, #error {
+    display: none;
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 2rem 0;
+}
+
+#error {
+    color: #ef4444;
+}
