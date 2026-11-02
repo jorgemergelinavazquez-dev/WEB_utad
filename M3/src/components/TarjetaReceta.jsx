@@ -13,7 +13,7 @@ export function TarjetaReceta({ receta, esFavorita, onAbrir, onAlternarFavorita 
         type="button"
         className={`favorita ${esFavorita ? 'marcada' : ''}`}
         onClick={() => onAlternarFavorita(receta)}
-        aria-label={esFavorita ? 'Quitar de favoritas' : 'Añadir a favoritas'}
+        aria-label={esFavorita ? 'Remove from favorites' : 'Add to favorites'}
         aria-pressed={esFavorita}
       >
         {esFavorita ? '★' : '☆'}

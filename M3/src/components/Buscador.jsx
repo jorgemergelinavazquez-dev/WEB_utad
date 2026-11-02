@@ -17,12 +17,12 @@ export function Buscador({ onBuscar, onSorpresa }) {
         type="search"
         value={texto}
         onChange={(evento) => setTexto(evento.target.value)}
-        placeholder="Ej. chicken, pasta, cake…"
-        aria-label="Nombre del plato"
+        placeholder="e.g. chicken, pasta, cake…"
+        aria-label="Dish name"
       />
-      <button type="submit">Buscar</button>
+      <button type="submit">Search</button>
       <button type="button" className="secundario" onClick={onSorpresa}>
-        🎲 Sorpréndeme
+        🎲 Surprise me
       </button>
     </form>
   );

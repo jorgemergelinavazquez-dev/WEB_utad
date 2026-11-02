@@ -39,7 +39,7 @@ function App() {
 
   // Sincronizar el título de la pestaña del navegador (sistema externo a React).
   useEffect(() => {
-    document.title = esBusqueda ? `«${peticion.texto}» · Recetario` : 'Recetario React';
+    document.title = esBusqueda ? `"${peticion.texto}" · Recipe Box` : 'Recipe Box';
   }, [esBusqueda, peticion]);
 
   // El tema se aplica como atributo en <html> y el CSS cambia las variables de color.
@@ -70,16 +70,16 @@ function App() {
   // useCallback para que DetalleReceta no vuelva a registrar el listener en cada render.
   const cerrarDetalle = useCallback(() => setIdAbierta(null), []);
 
-  let mensajeVacio = 'Busca un plato (en inglés) o pulsa 🎲 Sorpréndeme.';
-  if (vista === 'favoritas') mensajeVacio = 'Aún no tienes favoritas. Pulsa ☆ en una receta para guardarla.';
-  else if (esBusqueda) mensajeVacio = `No hay recetas para «${peticion.texto}». Prueba con otra palabra.`;
+  let mensajeVacio = 'Search for a dish or hit 🎲 Surprise me.';
+  if (vista === 'favoritas') mensajeVacio = 'No favorites yet. Tap ☆ on a recipe to save it.';
+  else if (esBusqueda) mensajeVacio = `No recipes found for "${peticion.texto}". Try another word.`;
 
   return (
     <div className="app">
       <header>
         <BotonTema tema={tema} onAlternar={alternarTema} />
-        <h1>Recetario</h1>
-        <p className="subtitulo">Async Odyssey, ahora en React</p>
+        <h1>Recipe Box</h1>
+        <p className="subtitulo">Async Odyssey, now in React</p>
         <Buscador onBuscar={buscar} onSorpresa={sorprender} />
       </header>
 
@@ -91,9 +91,9 @@ function App() {
       </div>
 
       <main>
-        {vista === 'resultados' && cargando && <p className="estado">Cargando recetas… ⏳</p>}
+        {vista === 'resultados' && cargando && <p className="estado">Loading recipes… ⏳</p>}
         {vista === 'resultados' && error && (
-          <p className="estado error">No se pudo conectar con TheMealDB. Inténtalo de nuevo.</p>
+          <p className="estado error">Couldn't reach TheMealDB. Please try again.</p>
         )}
         {(vista === 'favoritas' || (!cargando && !error)) && (
           <ListaRecetas

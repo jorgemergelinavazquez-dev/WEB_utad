@@ -20,7 +20,7 @@ export function DetalleReceta({ receta, esFavorita, onAlternarFavorita, onCerrar
         aria-label={receta.nombre}
         onClick={(evento) => evento.stopPropagation()}
       >
-        <button type="button" className="cerrar" onClick={onCerrar} aria-label="Cerrar">
+        <button type="button" className="cerrar" onClick={onCerrar} aria-label="Close">
           ✕
         </button>
         <img src={receta.imagen} alt={receta.nombre} />
@@ -30,10 +30,10 @@ export function DetalleReceta({ receta, esFavorita, onAlternarFavorita, onCerrar
           {receta.origen && ` · ${receta.origen}`}
         </p>
         <button type="button" className="secundario" onClick={() => onAlternarFavorita(receta)}>
-          {esFavorita ? '★ Quitar de favoritas' : '☆ Guardar en favoritas'}
+          {esFavorita ? '★ Remove from favorites' : '☆ Save to favorites'}
         </button>
 
-        <h3>Ingredientes ({receta.ingredientes.length})</h3>
+        <h3>Ingredients ({receta.ingredientes.length})</h3>
         <ul className="ingredientes">
           {receta.ingredientes.map((ingrediente) => (
             <li key={ingrediente.posicion}>
@@ -43,7 +43,7 @@ export function DetalleReceta({ receta, esFavorita, onAlternarFavorita, onCerrar
           ))}
         </ul>
 
-        <h3>Preparación</h3>
+        <h3>Instructions</h3>
         <p className="instrucciones">{receta.instrucciones}</p>
       </article>
     </div>

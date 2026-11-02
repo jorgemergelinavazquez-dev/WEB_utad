@@ -2,9 +2,9 @@
 export function FiltroCategoria({ categorias, valor, onCambiar }) {
   return (
     <label className="filtro">
-      Categoría
+      Category
       <select value={valor} onChange={(evento) => onCambiar(evento.target.value)}>
-        <option value="todas">Todas</option>
+        <option value="todas">All</option>
         {categorias.map((categoria) => (
           <option key={categoria} value={categoria}>
             {categoria}

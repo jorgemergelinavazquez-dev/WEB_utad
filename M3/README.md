@@ -1,11 +1,13 @@
-# M3 - Reactor Core: Recetario en React
+# M3 - Reactor Core: Recipe Box en React
 
 ## Qué es el proyecto
 Es mi app de la misión M2 (*Async Odyssey*, el buscador de recetas con la API de [TheMealDB](https://www.themealdb.com/api.php)) rehecha en React 19 con Vite. Hace lo mismo que antes y alguna cosa más, pero ya no toco el DOM a mano: guardo el estado y React pinta lo que toca.
 
+La web está en inglés a propósito. La API solo tiene las recetas en inglés, y si buscabas "lasaña" o "puré de calabaza" no salía nada. Con toda la interfaz en inglés se entiende desde el principio que hay que buscar en inglés.
+
 Qué se puede hacer:
-- Buscar recetas por nombre. La API va en inglés, así que hay que poner cosas como *chicken*, *pasta* o *cake*. Si tarda sale un mensaje de carga, y si falla o no encuentra nada también te avisa.
-- Pulsar 🎲 Sorpréndeme para que salga una receta aleatoria.
+- Buscar recetas por nombre, en inglés: *chicken*, *lasagna*, *pumpkin*… Si tarda sale un mensaje de carga, y si falla o no encuentra nada también te avisa.
+- Pulsar 🎲 Surprise me para que salga una receta aleatoria.
 - Filtrar por categoría. Las opciones del desplegable salen de las recetas que tienes en pantalla.
 - Abrir una receta para ver los ingredientes con sus cantidades y cómo se prepara. Se cierra con la ✕, pinchando fuera o con `Escape`.
 - Guardar favoritas con la ★. Se quedan guardadas en `localStorage` aunque recargues.

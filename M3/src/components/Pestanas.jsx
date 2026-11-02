@@ -1,6 +1,6 @@
 const PESTANAS = [
-  { id: 'resultados', texto: 'Resultados' },
-  { id: 'favoritas', texto: '★ Favoritas' },
+  { id: 'resultados', texto: 'Results' },
+  { id: 'favoritas', texto: '★ Favorites' },
 ];
 
 export function Pestanas({ vista, totalFavoritas, onCambiar }) {
