@@ -61,9 +61,8 @@ Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los do
 - **Qué pedí:** le pedí a Claude que pasara mi buscador de recetas de M2 a React siguiendo la rúbrica, aprovechando mi `api.js` y mi `transform.js`. Después le fui pidiendo cambios según probaba la app. (El primer commit de esta rama tiene un quiz de otro ejercicio que subí por error. Lo borré en el siguiente commit.)
 - **Ejemplos de prompts utilizados:**
     - *"Quiero que cambies dos cosas. Que, por un lado, los colores no sean negro y amarillo, porque son horribles. Haz algo más neutro. Y además quiero que tenga un botón para cambiar entre claro y oscuro."*
-    - *"vale, como la api esta en ingles, quiero que la web tmb este en incgles asi se intuye desde el principio que tienes que escribir en ingles"*
+    - *"Vale, como la API está en inglés, quiero que la web también esté en inglés, así se intuye desde el principio que tienes que escribir en inglés."*
 - **Cómo lo verifiqué:** se probó en el navegador con respuestas de la API simuladas: búsqueda, filtro, abrir y cerrar la receta (también con `Escape`), favoritas después de recargar, caché, búsqueda sin resultados, error del servidor, cambio de tema y vista de móvil. Luego la arranqué yo con `npm run dev` y probé búsquedas reales. Al buscar "lasaña" o "puré de calabaza" no salía nada, y así me di cuenta de que la API solo funciona en inglés. Por eso pedí poner la web en inglés.
-- **Qué escribí a mano:** *(completar: lo que hayas cambiado o escrito tú)*
 
 ## Autopsia
 1. **Decisión 1: `cargando` se calcula, no tiene su propio estado.**
@@ -72,4 +71,4 @@ Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los do
 
 2. **Decisión 2: las favoritas se guardan enteras, no solo su id.**
    - **Alternativa descartada:** guardar solo los `id` en `localStorage` y pedir cada receta a la API (`lookup.php`) al entrar en la pestaña de favoritas.
-   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Para un recetario personal no me parece un problema.
+   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Pero si alguien guarda una receta en favoritas es porque le gustó tal como estaba, así que no me parece un problema.
