@@ -58,8 +58,11 @@ Como keys de las listas uso el `idMeal` de cada receta, el nombre de la categor�
 Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los dos se pueden usar tal cual en otra app.
 
 ## Uso de IA
-- **Qué pedí:** primero usé Claude Code para sacar una versión en React, pero me hizo un quiz que no tenía nada que ver con mi M2. Luego le pedí a Claude que revisara el código con la rúbrica y que pasara mi buscador de recetas de M2 a React, aprovechando mi `api.js` y mi `transform.js`.
-- **Cómo lo verifiqué:** se probó en el navegador con respuestas de la API simuladas: búsqueda, filtro, abrir y cerrar la receta (también con `Escape`), favoritas después de recargar, caché, búsqueda sin resultados, error del servidor y vista de móvil. *(completar: cuando la arranques con `npm run dev` y pruebes búsquedas reales, añádelo aquí)*
+- **Qué pedí:** le pedí a Claude que pasara mi buscador de recetas de M2 a React siguiendo la rúbrica, aprovechando mi `api.js` y mi `transform.js`. Después le fui pidiendo cambios según probaba la app. (El primer commit de esta rama tiene un quiz de otro ejercicio que subí por error. Lo borré en el siguiente commit.)
+- **Ejemplos de prompts utilizados:**
+    - *"Quiero que cambies dos cosas. Que, por un lado, los colores no sean negro y amarillo, porque son horribles. Haz algo más neutro. Y además quiero que tenga un botón para cambiar entre claro y oscuro."*
+    - *"vale, como la api esta en ingles, quiero que la web tmb este en incgles asi se intuye desde el principio que tienes que escribir en ingles"*
+- **Cómo lo verifiqué:** se probó en el navegador con respuestas de la API simuladas: búsqueda, filtro, abrir y cerrar la receta (también con `Escape`), favoritas después de recargar, caché, búsqueda sin resultados, error del servidor, cambio de tema y vista de móvil. Luego la arranqué yo con `npm run dev` y probé búsquedas reales. Al buscar "lasaña" o "puré de calabaza" no salía nada, y así me di cuenta de que la API solo funciona en inglés. Por eso pedí poner la web en inglés.
 - **Qué escribí a mano:** *(completar: lo que hayas cambiado o escrito tú)*
 
 ## Autopsia
