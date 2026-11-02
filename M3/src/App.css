@@ -6,14 +6,38 @@
 
 /* Cabecera y buscador */
 header {
+  position: relative;
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.boton-tema {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background-color: var(--tarjeta);
+  color: var(--texto);
+}
+
+.boton-tema:hover {
+  border-color: var(--acento);
+}
+
+@media (max-width: 600px) {
+  .boton-tema {
+    position: static;
+    margin-bottom: 1rem;
+  }
 }
 
 h1 {
   margin: 0;
   font-size: clamp(2rem, 5vw, 3rem);
-  color: var(--acento);
+  color: var(--texto);
+  letter-spacing: -0.02em;
 }
 
 .subtitulo {
@@ -33,9 +57,9 @@ h1 {
   max-width: 420px;
   padding: 0.75rem;
   border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #222;
-  color: inherit;
+  border: 1px solid var(--borde);
+  background-color: var(--campo);
+  color: var(--texto);
   font: inherit;
 }
 
@@ -44,7 +68,7 @@ h1 {
   border: none;
   border-radius: 6px;
   background-color: var(--acento);
-  color: var(--fondo);
+  color: var(--sobre-acento);
   font-weight: 700;
 }
 
@@ -62,7 +86,7 @@ h1 {
 }
 
 .secundario:hover {
-  background-color: rgba(250, 204, 21, 0.1);
+  background-color: var(--acento-suave);
 }
 
 /* Pestañas y filtro */
@@ -93,7 +117,7 @@ h1 {
 .pestanas button.activa {
   background-color: var(--acento);
   border-color: var(--acento);
-  color: var(--fondo);
+  color: var(--sobre-acento);
   font-weight: 700;
 }
 
@@ -107,8 +131,8 @@ h1 {
 .filtro select {
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #222;
+  border: 1px solid var(--borde);
+  background-color: var(--campo);
   color: inherit;
   font: inherit;
 }
@@ -126,6 +150,7 @@ h1 {
   border: 1px solid var(--borde);
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: var(--sombra);
   transition: transform 0.2s;
 }
 
@@ -151,7 +176,7 @@ h1 {
 .tarjeta h2 {
   font-size: 1.1rem;
   margin: 0.8rem 0.75rem 0.2rem;
-  color: var(--acento);
+  color: var(--texto);
 }
 
 .tarjeta p {
@@ -168,14 +193,15 @@ h1 {
   height: 2.4rem;
   border-radius: 50%;
   border: none;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.55);
   color: #fff;
   font-size: 1.3rem;
   line-height: 1;
 }
 
 .favorita.marcada {
-  color: var(--acento);
+  background-color: var(--acento);
+  color: var(--sobre-acento);
 }
 
 /* Mensajes */
@@ -197,7 +223,7 @@ h1 {
   display: grid;
   place-items: center;
   padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 10;
 }
 
@@ -221,7 +247,7 @@ h1 {
 
 .modal h2 {
   margin: 1rem 0 0;
-  color: var(--acento);
+  color: var(--texto);
 }
 
 .modal h3 {
@@ -242,8 +268,9 @@ h1 {
   height: 2.2rem;
   border-radius: 50%;
   border: none;
-  background-color: #333;
-  color: #fff;
+  background-color: var(--campo);
+  color: var(--texto);
+  border: 1px solid var(--borde);
   z-index: 1;
 }
 
@@ -271,5 +298,5 @@ h1 {
 
 .instrucciones {
   white-space: pre-line;
-  color: #cfcfcf;
+  color: var(--texto);
 }

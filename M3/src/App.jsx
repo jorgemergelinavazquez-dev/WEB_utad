@@ -8,6 +8,11 @@ import { Pestanas } from './components/Pestanas';
 import { FiltroCategoria } from './components/FiltroCategoria';
 import { ListaRecetas } from './components/ListaRecetas';
 import { DetalleReceta } from './components/DetalleReceta';
+import { BotonTema } from './components/BotonTema';
+
+// Si el usuario nunca ha elegido tema, usamos el de su sistema operativo.
+const temaDelSistema = () =>
+  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
 
 function App() {
   // Estado mínimo: solo lo que el usuario ha decidido.
@@ -16,6 +21,7 @@ function App() {
   const [categoria, setCategoria] = useState('todas');
   const [idAbierta, setIdAbierta] = useState(null);
   const [favoritas, setFavoritas] = useLocalStorage('recetario:favoritas', []);
+  const [tema, setTema] = useLocalStorage('recetario:tema', temaDelSistema);
 
   // Todo lo demás se deriva en el render.
   const esBusqueda = peticion?.tipo === 'busqueda';
@@ -35,6 +41,13 @@ function App() {
   useEffect(() => {
     document.title = esBusqueda ? `«${peticion.texto}» · Recetario` : 'Recetario React';
   }, [esBusqueda, peticion]);
+
+  // El tema se aplica como atributo en <html> y el CSS cambia las variables de color.
+  useEffect(() => {
+    document.documentElement.dataset.tema = tema;
+  }, [tema]);
+
+  const alternarTema = () => setTema((actual) => (actual === 'oscuro' ? 'claro' : 'oscuro'));
 
   const buscar = (texto) => {
     setPeticion({ tipo: 'busqueda', texto });
@@ -64,6 +77,7 @@ function App() {
   return (
     <div className="app">
       <header>
+        <BotonTema tema={tema} onAlternar={alternarTema} />
         <h1>Recetario</h1>
         <p className="subtitulo">Async Odyssey, ahora en React</p>
         <Buscador onBuscar={buscar} onSorpresa={sorprender} />

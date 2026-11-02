@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 
+// Como en useState, el valor inicial puede ser una función: así solo se
+// calcula si no hay nada guardado.
 function leer(clave, valorInicial) {
+  const porDefecto = () => (typeof valorInicial === 'function' ? valorInicial() : valorInicial);
   try {
     const guardado = localStorage.getItem(clave);
-    return guardado !== null ? JSON.parse(guardado) : valorInicial;
+    return guardado !== null ? JSON.parse(guardado) : porDefecto();
   } catch {
-    return valorInicial;
+    return porDefecto();
   }
 }
 
