@@ -1,25 +1,23 @@
-# M3 · Reactor Core: Recetario en React
+# M3 - Reactor Core: Recetario en React
 
-Reconstrucción en **React 19 + Vite** de mi app de la misión M2 (*Async Odyssey: buscador de recetas* con la API pública de [TheMealDB](https://www.themealdb.com/api.php)). La lógica es la misma, pero ahora la interfaz reacciona al estado en lugar de manipular el DOM a mano.
+## Qué es el proyecto
+Es mi app de la misión M2 (*Async Odyssey*, el buscador de recetas con la API de [TheMealDB](https://www.themealdb.com/api.php)) rehecha en React 19 con Vite. Hace lo mismo que antes y alguna cosa más, pero ya no toco el DOM a mano: guardo el estado y React pinta lo que toca.
 
-## Qué hace
+Qué se puede hacer:
+- Buscar recetas por nombre. La API va en inglés, así que hay que poner cosas como *chicken*, *pasta* o *cake*. Si tarda sale un mensaje de carga, y si falla o no encuentra nada también te avisa.
+- Pulsar 🎲 Sorpréndeme para que salga una receta aleatoria.
+- Filtrar por categoría. Las opciones del desplegable salen de las recetas que tienes en pantalla.
+- Abrir una receta para ver los ingredientes con sus cantidades y cómo se prepara. Se cierra con la ✕, pinchando fuera o con `Escape`.
+- Guardar favoritas con la ★. Se quedan guardadas en `localStorage` aunque recargues.
+- Repetir una búsqueda sin volver a llamar a la API, porque mantengo la caché que hice como reto extra en M2.
+- Cambiar entre tema claro y oscuro con el botón de arriba a la derecha. La primera vez coge el tema del sistema operativo, y luego se acuerda de lo que elegiste.
 
-- **Buscar recetas** por nombre (en inglés: *chicken*, *pasta*, *cake*…), con mensajes de carga, error y "sin resultados".
-- **🎲 Sorpréndeme**: trae una receta aleatoria para cuando no sabes qué cocinar.
-- **Filtro por categoría**: las opciones salen de las recetas que estás viendo.
-- **Detalle de la receta** con ingredientes, cantidades y preparación. Se cierra con ✕, haciendo clic fuera o con la tecla `Escape`.
-- **Favoritas ★**: se guardan en `localStorage` y siguen ahí al recargar la página.
-- **Caché de búsquedas**: repetir una búsqueda no vuelve a llamar a la API (la mejora extra de M2, ahora dentro del hook `useFetch`).
-
-## Cómo arrancarlo
-
-```bash
-cd M3
-npm install
-npm run dev
-```
-
-Abre la dirección que indique la terminal (por defecto http://localhost:5173/).
+## Cómo arrancar el proyecto
+1. Clona o descarga el repositorio.
+2. Abre la terminal en la carpeta `M3`.
+3. Instala las dependencias con `npm install`.
+4. Levanta el servidor con `npm run dev`.
+5. Abre en el navegador la dirección que te dé la terminal (por defecto http://localhost:5173/).
 
 ## Estructura
 
@@ -37,34 +35,36 @@ src/
     ├── FiltroCategoria.jsx  Select de categorías
     ├── ListaRecetas.jsx     Rejilla o mensaje si está vacía
     ├── TarjetaReceta.jsx    Una receta + botón de favorita
+    ├── BotonTema.jsx        Botón de claro / oscuro
     └── DetalleReceta.jsx    Ventana con ingredientes y preparación
 ```
 
-### Cómo se aplica lo que pide la rúbrica
+`api.js` junta lo que en M2 eran `api.js` y `transform.js`, pero ahora solo prepara las URLs y limpia los datos. La petición la hace el hook `useFetch`.
 
-- **Estado mínimo:** `App` solo guarda lo que decide el usuario (`peticion`, `vista`, `categoria`, `idAbierta` y `favoritas`). La URL, la lista transformada, las categorías, la lista filtrada y la receta abierta se **calculan en el render**.
-- **`cargando` también es derivado:** `useFetch` guarda a qué URL pertenece la última respuesta. Si no coincide con la URL actual, está cargando.
-- **Efectos solo para sistemas externos, todos con su motivo:**
-  1. `useFetch`: petición a la API, con **limpieza** (`AbortController`) para que una respuesta antigua no pise a la nueva.
-  2. `useLocalStorage`: escribir en `localStorage` cuando cambia el valor.
-  3. `DetalleReceta`: escuchar la tecla `Escape`, con **limpieza** del listener al cerrar.
-  4. `App`: sincronizar `document.title` con la búsqueda.
-- **Keys estables:** `receta.id` (el `idMeal` de la API), el nombre de la categoría y la posición fija del ingrediente en la receta (de 1 a 20). Nunca el índice del `map`.
-- **Cero mutaciones:** las favoritas se actualizan con `filter` o con *spread*, y las categorías se ordenan sobre una copia (`[...new Set(...)]`).
-- **Bonus:** dos custom hooks reutilizables, `useFetch` y `useLocalStorage`.
+## Estado y efectos
+En `App` solo guardo lo que decide el usuario: qué ha buscado (`peticion`), en qué pestaña está (`vista`), la categoría elegida, qué receta tiene abierta (`idAbierta`), sus favoritas y el tema. Todo lo demás lo calculo en el render cada vez: la URL, la lista ya transformada, las categorías, la lista filtrada y la receta abierta. Hasta el "cargando" sale de ahí (lo explico en la Autopsia).
+
+Hay cinco `useEffect` y los cinco hablan con algo de fuera de React:
+1. En `useFetch`, la petición a la API. Lleva limpieza con `AbortController`, así que si buscas dos cosas seguidas la respuesta de la primera no pisa a la segunda.
+2. En `useLocalStorage`, guardar el valor cada vez que cambia.
+3. En `DetalleReceta`, escuchar la tecla `Escape`. Al cerrar la ventana quito el listener.
+4. En `App`, poner la búsqueda en el título de la pestaña del navegador.
+5. En `App`, poner el tema como atributo `data-tema` en `<html>`. Los colores son variables CSS, así que con cambiar ese atributo cambia toda la página sin que ningún componente tenga que saber qué tema hay puesto.
+
+Como keys de las listas uso el `idMeal` de cada receta, el nombre de la categoría y la posición del ingrediente dentro de la receta (va del 1 al 20 en la API). En ningún sitio uso el índice del `map`. Tampoco muto nada: las favoritas se actualizan con `filter` o con *spread*, y las categorías se ordenan sobre una copia.
+
+Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los dos se pueden usar tal cual en otra app.
 
 ## Uso de IA
-
-- **Qué pedí:** usé Claude Code para generar una primera versión en React. Como no correspondía a mi app de M2, después le pedí a Claude que revisara el código frente a la rúbrica y que reconstruyera mi buscador de recetas de M2 en React, reaprovechando `api.js` y `transform.js`.
-- **Cómo lo verifiqué:** la app se probó en el navegador con respuestas simuladas de la API. Se comprobaron la búsqueda, el filtro, la apertura y el cierre del detalle (también con `Escape`), las favoritas tras recargar, la caché, el mensaje sin resultados, el error del servidor y la vista en móvil. *(completar: cuando la arranques con `npm run dev` y pruebes búsquedas reales, añádelo aquí)*
+- **Qué pedí:** primero usé Claude Code para sacar una versión en React, pero me hizo un quiz que no tenía nada que ver con mi M2. Luego le pedí a Claude que revisara el código con la rúbrica y que pasara mi buscador de recetas de M2 a React, aprovechando mi `api.js` y mi `transform.js`.
+- **Cómo lo verifiqué:** se probó en el navegador con respuestas de la API simuladas: búsqueda, filtro, abrir y cerrar la receta (también con `Escape`), favoritas después de recargar, caché, búsqueda sin resultados, error del servidor y vista de móvil. *(completar: cuando la arranques con `npm run dev` y pruebes búsquedas reales, añádelo aquí)*
 - **Qué escribí a mano:** *(completar: lo que hayas cambiado o escrito tú)*
 
 ## Autopsia
+1. **Decisión 1: `cargando` se calcula, no tiene su propio estado.**
+   - **Alternativa descartada:** el `useFetch` de siempre, con tres `useState` (`datos`, `cargando` y `error`) y un `setCargando(true)` al principio del efecto.
+   - **Por qué tomé esta decisión:** con tres estados pueden quedar descuadrados entre sí, y cambiar el estado dentro del efecto provoca un render de más. Lo que hago es guardar junto a la respuesta la URL de la que viene. Si no coincide con la URL actual es que todavía está cargando. Me ahorro un estado y no hay forma de que se desincronice.
 
-1. **`cargando` derivado en lugar de tener su propio estado.**
-   - **Alternativa descartada:** el `useFetch` clásico, con tres `useState` (`datos`, `cargando`, `error`) y un `setCargando(true)` al principio del efecto.
-   - **Por qué:** así habría estado duplicado que puede desincronizarse, y además se actualiza el estado de forma síncrona dentro del efecto, lo que provoca un render extra. Guardando a qué URL pertenece la respuesta, "cargando" es simplemente "la respuesta no es de esta URL". Es la idea de *estado mínimo, valores derivados* aplicada al hook.
-
-2. **Favoritas guardadas como objetos completos, no solo como ids.**
-   - **Alternativa descartada:** guardar solo los `id` en `localStorage` y pedir cada receta a la API (`lookup.php`) al abrir la pestaña de favoritas.
-   - **Por qué:** con objetos completos, las favoritas funcionan sin red y al instante, y no hace falta otro `useEffect` con varias peticiones. El precio es que una favorita guardada no se actualiza si la receta cambia en la API. Para un recetario personal, me parece un intercambio razonable.
+2. **Decisión 2: las favoritas se guardan enteras, no solo su id.**
+   - **Alternativa descartada:** guardar solo los `id` en `localStorage` y pedir cada receta a la API (`lookup.php`) al entrar en la pestaña de favoritas.
+   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Para un recetario personal no me parece un problema.
