@@ -1,100 +1,103 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { PREGUNTAS_ORIGINALES } from './preguntas';
-import { Quiz } from './components/Quiz';
-import { PantallaFinal } from './components/PantallaFinal';
-
-const barajarArray = (array) => {
-  const nuevoArray = [...array];
-  for (let i = nuevoArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [nuevoArray[i], nuevoArray[j]] = [nuevoArray[j], nuevoArray[i]];
-  }
-  return nuevoArray;
-};
+import { transformarRecetas, urlAleatoria, urlBusqueda } from './api';
+import { useFetch } from './hooks/useFetch';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { Buscador } from './components/Buscador';
+import { Pestanas } from './components/Pestanas';
+import { FiltroCategoria } from './components/FiltroCategoria';
+import { ListaRecetas } from './components/ListaRecetas';
+import { DetalleReceta } from './components/DetalleReceta';
 
 function App() {
-  const [preguntas, setPreguntas] = useState([]);
-  const [indicePreguntaActual, setIndicePreguntaActual] = useState(0);
-  const [puntos, setPuntos] = useState(0);
-  const [juegoTerminado, setJuegoTerminado] = useState(false);
-  const [racha, setRacha] = useState(0);
-  const [seleccion, setSeleccion] = useState(null);
-  const [mostrarResultado, setMostrarResultado] = useState(false);
+  // Estado mínimo: solo lo que el usuario ha decidido.
+  const [peticion, setPeticion] = useState(null); // { tipo: 'busqueda', texto } | { tipo: 'sorpresa', n }
+  const [vista, setVista] = useState('resultados');
+  const [categoria, setCategoria] = useState('todas');
+  const [idAbierta, setIdAbierta] = useState(null);
+  const [favoritas, setFavoritas] = useLocalStorage('recetario:favoritas', []);
 
+  // Todo lo demás se deriva en el render.
+  const esBusqueda = peticion?.tipo === 'busqueda';
+  const url = !peticion ? null : esBusqueda ? urlBusqueda(peticion.texto) : urlAleatoria(peticion.n);
+  const { datos, cargando, error } = useFetch(url, { cachear: esBusqueda });
+
+  const resultados = transformarRecetas(datos?.meals);
+  const base = vista === 'favoritas' ? favoritas : resultados;
+  const categorias = [...new Set(base.map((receta) => receta.categoria))].sort();
+  const categoriaActiva = categorias.includes(categoria) ? categoria : 'todas';
+  const visibles =
+    categoriaActiva === 'todas' ? base : base.filter((receta) => receta.categoria === categoriaActiva);
+  const idsFavoritas = new Set(favoritas.map((receta) => receta.id));
+  const recetaAbierta = [...resultados, ...favoritas].find((receta) => receta.id === idAbierta);
+
+  // Sincronizar el título de la pestaña del navegador (sistema externo a React).
   useEffect(() => {
-    iniciarJuego();
-  }, []);
+    document.title = esBusqueda ? `«${peticion.texto}» · Recetario` : 'Recetario React';
+  }, [esBusqueda, peticion]);
 
-  const iniciarJuego = () => {
-    setPreguntas(barajarArray(PREGUNTAS_ORIGINALES));
-    setIndicePreguntaActual(0);
-    setPuntos(0);
-    setJuegoTerminado(false);
-    setRacha(0);
-    setSeleccion(null);
-    setMostrarResultado(false);
+  const buscar = (texto) => {
+    setPeticion({ tipo: 'busqueda', texto });
+    setVista('resultados');
   };
 
-  const manejarRespuesta = (indiceSeleccionado) => {
-    if (mostrarResultado) return;
-
-    setSeleccion(indiceSeleccionado);
-    setMostrarResultado(true);
-
-    const preguntaActual = preguntas[indicePreguntaActual];
-    const esCorrecta = indiceSeleccionado === preguntaActual.respuestaCorrecta;
-
-    setTimeout(() => {
-      if (esCorrecta) {
-        setPuntos(puntos + 1);
-        setRacha(racha + 1);
-      } else {
-        setRacha(0);
-      }
-
-      const siguienteIndice = indicePreguntaActual + 1;
-      if (siguienteIndice < preguntas.length) {
-        setIndicePreguntaActual(siguienteIndice);
-      } else {
-        setJuegoTerminado(true);
-      }
-
-      setSeleccion(null);
-      setMostrarResultado(false);
-    }, 1500);
+  const sorprender = () => {
+    setPeticion({ tipo: 'sorpresa', n: Date.now() });
+    setVista('resultados');
   };
 
-  const porcentajeAciertos = preguntas.length > 0 ? Math.round((puntos / preguntas.length) * 100) : 0;
-  
-  let mensajeFinal = "¡Sigue practicando!";
-  if (porcentajeAciertos === 100) mensajeFinal = "¡Perfecto! Eres un genio.";
-  else if (porcentajeAciertos >= 75) mensajeFinal = "¡Muy bien hecho!";
-  else if (porcentajeAciertos >= 50) mensajeFinal = "¡No está mal, aprobaste!";
+  const alternarFavorita = (receta) => {
+    setFavoritas((anteriores) =>
+      anteriores.some((fav) => fav.id === receta.id)
+        ? anteriores.filter((fav) => fav.id !== receta.id)
+        : [...anteriores, receta],
+    );
+  };
 
-  if (preguntas.length === 0) return <div>Cargando...</div>;
+  // useCallback para que DetalleReceta no vuelva a registrar el listener en cada render.
+  const cerrarDetalle = useCallback(() => setIdAbierta(null), []);
+
+  let mensajeVacio = 'Busca un plato (en inglés) o pulsa 🎲 Sorpréndeme.';
+  if (vista === 'favoritas') mensajeVacio = 'Aún no tienes favoritas. Pulsa ☆ en una receta para guardarla.';
+  else if (esBusqueda) mensajeVacio = `No hay recetas para «${peticion.texto}». Prueba con otra palabra.`;
 
   return (
-    <div className="app-container">
-      <h1>Quiz React</h1>
+    <div className="app">
+      <header>
+        <h1>Recetario</h1>
+        <p className="subtitulo">Async Odyssey, ahora en React</p>
+        <Buscador onBuscar={buscar} onSorpresa={sorprender} />
+      </header>
 
-      {juegoTerminado ? (
-        <PantallaFinal 
-          puntos={puntos}
-          totalPreguntas={preguntas.length}
-          porcentajeAciertos={porcentajeAciertos}
-          mensajeFinal={mensajeFinal}
-          reiniciarJuego={iniciarJuego}
-        />
-      ) : (
-        <Quiz 
-          preguntaActual={preguntas[indicePreguntaActual]}
-          indicePreguntaActual={indicePreguntaActual}
-          totalPreguntas={preguntas.length}
-          racha={racha}
-          mostrarResultado={mostrarResultado}
-          seleccion={seleccion}
-          manejarRespuesta={manejarRespuesta}
+      <div className="barra">
+        <Pestanas vista={vista} totalFavoritas={favoritas.length} onCambiar={setVista} />
+        {categorias.length > 1 && (
+          <FiltroCategoria categorias={categorias} valor={categoriaActiva} onCambiar={setCategoria} />
+        )}
+      </div>
+
+      <main>
+        {vista === 'resultados' && cargando && <p className="estado">Cargando recetas… ⏳</p>}
+        {vista === 'resultados' && error && (
+          <p className="estado error">No se pudo conectar con TheMealDB. Inténtalo de nuevo.</p>
+        )}
+        {(vista === 'favoritas' || (!cargando && !error)) && (
+          <ListaRecetas
+            recetas={visibles}
+            idsFavoritas={idsFavoritas}
+            mensajeVacio={mensajeVacio}
+            onAbrir={setIdAbierta}
+            onAlternarFavorita={alternarFavorita}
+          />
+        )}
+      </main>
+
+      {recetaAbierta && (
+        <DetalleReceta
+          receta={recetaAbierta}
+          esFavorita={idsFavoritas.has(recetaAbierta.id)}
+          onAlternarFavorita={alternarFavorita}
+          onCerrar={cerrarDetalle}
         />
       )}
     </div>
