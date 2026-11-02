@@ -1,0 +1,207 @@
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Reset y variables de color */
+:root {
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-cyan: #38bdf8;
+  --accent-blue: #3b82f6;
+  --correct: #10b981;
+  --incorrect: #ef4444;
+  --btn-bg: #334155;
+  --btn-hover: #475569;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Contenedor Principal TOTALMENTE CUADRADO */
+.app-container {
+  width: 600px; /* Ancho fijo */
+  height: 600px; /* Alto igual al ancho para ser perfectamente cuadrado */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribuye el contenido uniformemente */
+  margin: 20px;
+  padding: 3rem 2.5rem; /* Margen interior amplio */
+  background-color: var(--bg-card);
+  border-radius: 16px; /* Forma regular menos redondeada */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #334155;
+  box-sizing: border-box;
+}
+
+/* Evitar que se corte el título con degradado */
+h1 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem; /* Margen superior para evitar cortes */
+  padding-bottom: 0.5rem; /* Margen inferior para evitar cortes */
+  line-height: 1.3; /* Espaciado extra para prevenir que las letras se corten por arriba */
+  text-align: center;
+  background: linear-gradient(to right, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+/* Header (Progreso y racha) */
+.header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.progreso {
+  color: var(--text-secondary);
+}
+
+.racha {
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+/* Quiz content */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Pregunta con suficiente espacio y sin cortes */
+.pregunta {
+  font-size: 1.35rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  word-wrap: break-word; /* Evita desbordamiento */
+}
+
+/* Opciones (Botones rectangulares) */
+.opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-opcion {
+  width: 100%;
+  padding: 14px 20px; /* Tamaño del botón cómodo */
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background-color: var(--btn-bg);
+  border: 1px solid #475569;
+  border-radius: 8px; /* Menos redondeado y más rectangular */
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.btn-opcion:hover:not(:disabled) {
+  background-color: var(--btn-hover);
+  border-color: var(--accent-cyan);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+}
+
+/* Clases de respuesta */
+.btn-opcion.correcta {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  border-color: var(--correct) !important;
+  color: #34d399 !important;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.btn-opcion.incorrecta {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border-color: var(--incorrect) !important;
+  color: #f87171 !important;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+.btn-opcion:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Pantalla Final */
+.pantalla-final {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.pantalla-final h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.pantalla-final p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  margin: 0.5rem 0;
+}
+
+.mensaje-final {
+  font-size: 1.3rem !important;
+  font-weight: 700;
+  color: var(--accent-cyan) !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* Botón de reinicio */
+.btn-reiniciar {
+  margin-top: 1.5rem;
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+.btn-reiniciar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+}
