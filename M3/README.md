@@ -72,4 +72,4 @@ Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los do
 
 2. **Decisión 2: las favoritas se guardan enteras, no solo su id.**
    - **Alternativa descartada:** guardar solo los `id` en `localStorage` y pedir cada receta a la API (`lookup.php`) al entrar en la pestaña de favoritas.
-   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Pero si al final guardaste la receta en favoritos es porque te gusto la version anterior y no me parece un problema.
+   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Para un recetario personal no me parece un problema.
