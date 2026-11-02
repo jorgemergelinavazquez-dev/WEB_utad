@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async Odyssey - TheMealDB</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <header>
+        <h1>Buscador de Recetas</h1>
+        <form id="searchForm">
+            <input type="text" id="searchInput" placeholder="Ej. chicken" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </header>
+
+    <main>
+        <div id="loading">
+            <p>Cargando recetas... ⏳</p>
+        </div>
+
+        <div id="error">
+            <p id="errorMessage">Ha ocurrido un error.</p>
+        </div>
+
+        <div id="results">
+        </div>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
