@@ -14,11 +14,11 @@
 - Es mi **Recipe Box**: buscador de recetas con la API de TheMealDB (solo lectura), hecho en React 19 + Vite, en JavaScript (no TypeScript).
 - La interfaz está en inglés a propósito (TheMealDB solo tiene recetas en inglés). Código, comentarios y README en español.
 - Ya tiene: búsqueda, receta aleatoria, filtro por categoría, detalle en modal, favoritas en localStorage, tema claro/oscuro.
-- Archivos clave: `src/App.jsx`, `src/services/` (`http.js` = fetch + comprobación de `r.ok`; `mealdb.js` = TheMealDB; `misRecetas.js` = json-server GET/POST), `src/hooks/useLocalStorage.js`, `src/components/*`. Ya no hay `api.js` ni `useFetch.js`: la búsqueda va con `useQuery`.
+- Archivos clave: `src/App.jsx`, `src/api.js` (URLs + transformación de datos de TheMealDB), `src/hooks/useFetch.js` (fetch dentro de useEffect, viene de M3), `src/hooks/useLocalStorage.js`, `src/components/*`.
 
 ## Lo que la M4 tiene que añadir (idea decidida: seguir con las recetas)
 Un formulario serio de **registro + listado**: «Sube tu receta» que se valida, se envía con POST a una API y aparece en un listado «Mis recetas».
-- API para el POST: **json-server en local** (decidido). JSONPlaceholder no guarda nada y entonces la invalidación no se notaría en el listado. Arranca con `npm run api` (puerto 3001, datos en `db.json`, colección `recetas`); URL en `VITE_API_URL`. TheMealDB sigue usándose para la búsqueda (solo lectura).
+- API para el POST: **todavía por decidir**. La recomendación es **json-server en local**, porque JSONPlaceholder no guarda nada y entonces la invalidación no se notaría en el listado. TheMealDB sigue usándose para la búsqueda (solo lectura).
 
 ## Rúbrica de la M4 (100 pts + bonus)
 | Bloque | Qué se evalúa | Pts |
