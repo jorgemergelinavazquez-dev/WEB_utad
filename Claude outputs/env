@@ -1,0 +1,2 @@
+# URL base de TheMealDB (no es un secreto: todo lo que empieza por VITE_ acaba en el cliente)
+VITE_MEALDB_URL=https://www.themealdb.com/api/json/v1/1

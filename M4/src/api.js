@@ -1,7 +1,7 @@
 // Todo lo que sabe de TheMealDB vive aquí: URLs y transformación de datos.
 // Viene de api.js + transform.js de M2, pero sin tocar el DOM.
 
-const BASE = 'https://www.themealdb.com/api/json/v1/1';
+const BASE = import.meta.env.VITE_MEALDB_URL;
 
 export const urlBusqueda = (texto) =>
   `${BASE}/search.php?s=${encodeURIComponent(texto)}`;
