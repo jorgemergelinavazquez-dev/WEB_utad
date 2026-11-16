@@ -1,0 +1,59 @@
+/* Tema claro (por defecto): grises cálidos y un verde salvia de acento */
+:root {
+  --fondo: #f5f5f4;
+  --tarjeta: #ffffff;
+  --campo: #ffffff;
+  --borde: #e2e0dd;
+  --texto: #1f1d1b;
+  --texto-suave: #6f6a65;
+  --acento: #4f7a6d;
+  --acento-hover: #3f6559;
+  --acento-suave: rgba(79, 122, 109, 0.12);
+  --sobre-acento: #ffffff;
+  --error: #b42318;
+  --sombra: 0 6px 18px rgba(31, 29, 27, 0.08);
+
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  color: var(--texto);
+  background-color: var(--fondo);
+}
+
+/* Tema oscuro: mismo esquema, solo cambian los valores */
+:root[data-tema='oscuro'] {
+  --fondo: #1a1a1c;
+  --tarjeta: #242427;
+  --campo: #2c2c30;
+  --borde: #3a3a3f;
+  --texto: #e8e6e3;
+  --texto-suave: #a3a19d;
+  --acento: #8fb8aa;
+  --acento-hover: #a8cabe;
+  --acento-suave: rgba(143, 184, 170, 0.14);
+  --sobre-acento: #1a1a1c;
+  --error: #f28b82;
+  --sombra: 0 6px 18px rgba(0, 0, 0, 0.35);
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
