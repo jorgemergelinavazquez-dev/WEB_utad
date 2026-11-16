@@ -78,7 +78,7 @@ Un formulario serio de **registro + listado**: «Sube tu receta» que se valida,
 **Notas**
 - `../Claude outputs/` (fuera de `M4/`) sale como sin seguimiento en git: no meterla en ningún commit.
 - Los comandos de terminal piden permiso a Jorge; leer archivos no. Agrupar comandos para pedir permiso las menos veces posibles.
-- Pendiente de decidir: si se guarda un registro de prompts (propuesta: `M4/PROMPTS.md` enlazado desde la declaración de IA del README).
+- **Registro de prompts (obligatorio):** después de cada petición de Jorge, añadir una entrada al final de `M4/PROMPTS.md` con: fecha, su prompt literal (copiado tal cual, con erratas), qué hizo la IA, qué archivos se tocaron y si Jorge cambió o rechazó algo (incluidos los permisos de herramientas rechazados). Seguir la numeración y el formato de las entradas que ya hay. Enlazarlo desde la declaración de IA del README.
 - Si Jorge edita este archivo con otra herramienta, comprobar que no se pierden las secciones de progreso.
 
 ## Entrega
