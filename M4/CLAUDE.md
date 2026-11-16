@@ -14,7 +14,7 @@
 - Es mi **Recipe Box**: buscador de recetas con la API de TheMealDB (solo lectura), hecho en React 19 + Vite, en JavaScript (no TypeScript).
 - La interfaz está en inglés a propósito (TheMealDB solo tiene recetas en inglés). Código, comentarios y README en español.
 - Ya tiene: búsqueda, receta aleatoria, filtro por categoría, detalle en modal, favoritas en localStorage, tema claro/oscuro.
-- Archivos clave: `src/App.jsx`, `src/api.js` (URLs + transformación de datos de TheMealDB), `src/hooks/useFetch.js` (fetch dentro de useEffect, viene de M3), `src/hooks/useLocalStorage.js`, `src/components/*`.
+- Archivos clave: `src/App.jsx`, `src/services/` (`http.js` = fetch + comprobación de `r.ok`; `mealdb.js` = TheMealDB; `misRecetas.js` = json-server GET/POST), `src/hooks/useLocalStorage.js`, `src/components/*`. Ya no hay `api.js` ni `useFetch.js`: la búsqueda va con `useQuery`.
 
 ## Lo que la M4 tiene que añadir (idea decidida: seguir con las recetas)
 Un formulario serio de **registro + listado**: «Sube tu receta» que se valida, se envía con POST a una API y aparece en un listado «Mis recetas».

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import './App.css';
-import { transformarRecetas, urlAleatoria, urlBusqueda } from './api';
-import { useFetch } from './hooks/useFetch';
+import { buscarRecetas, recetaAleatoria } from './services/mealdb';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Buscador } from './components/Buscador';
 import { Pestanas } from './components/Pestanas';
@@ -25,10 +25,21 @@ function App() {
 
   // Todo lo demás se deriva en el render.
   const esBusqueda = peticion?.tipo === 'busqueda';
-  const url = !peticion ? null : esBusqueda ? urlBusqueda(peticion.texto) : urlAleatoria(peticion.n);
-  const { datos, cargando, error } = useFetch(url, { cachear: esBusqueda });
 
-  const resultados = transformarRecetas(datos?.meals);
+  // La clave lleva sus parámetros: cada búsqueda (y cada sorpresa, por su "n")
+  // tiene su propia entrada en la caché de TanStack Query.
+  const consulta = useQuery({
+    queryKey: esBusqueda ? ['recetas', peticion.texto] : ['aleatoria', peticion?.n],
+    queryFn: ({ signal }) => (esBusqueda ? buscarRecetas(peticion.texto, signal) : recetaAleatoria(signal)),
+    enabled: Boolean(peticion), // sin búsqueda ni sorpresa todavía, no se pide nada
+    staleTime: Infinity, // una receta de TheMealDB no cambia: no hace falta volver a pedirla
+  });
+  // Una query desactivada también está "pending" (no tiene datos), así que solo
+  // contamos como carga cuando de verdad hay una petición en marcha.
+  const cargando = Boolean(peticion) && consulta.isPending;
+  const error = consulta.error;
+
+  const resultados = consulta.data ?? [];
   const base = vista === 'favoritas' ? favoritas : resultados;
   const categorias = [...new Set(base.map((receta) => receta.categoria))].sort();
   const categoriaActiva = categorias.includes(categoria) ? categoria : 'todas';
@@ -93,7 +104,12 @@ function App() {
       <main>
         {vista === 'resultados' && cargando && <p className="estado">Loading recipes… ⏳</p>}
         {vista === 'resultados' && error && (
-          <p className="estado error">Couldn't reach TheMealDB. Please try again.</p>
+          <p className="estado error" role="alert">
+            {error.message}{' '}
+            <button type="button" onClick={() => consulta.refetch()}>
+              Try again
+            </button>
+          </p>
         )}
         {(vista === 'favoritas' || (!cargando && !error)) && (
           <ListaRecetas
