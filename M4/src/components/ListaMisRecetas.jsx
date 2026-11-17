@@ -70,10 +70,14 @@ export function ListaMisRecetas({ accion, children }) {
     queryKey: ['misRecetas'],
     queryFn: ({ signal }) => obtenerMisRecetas(signal),
     // select transforma lo que ve el componente sin tocar la caché: las más nuevas primero.
-    select: (recetas) => recetas.toSorted((a, b) => String(b.creadaEn).localeCompare(String(a.creadaEn))),
+    select: ({ recetas, descartadas }) => ({
+      recetas: recetas.toSorted((a, b) => b.creadaEn.localeCompare(a.creadaEn)),
+      descartadas,
+    }),
   });
 
-  const total = misRecetas.data?.length;
+  const total = misRecetas.data?.recetas.length;
+  const descartadas = misRecetas.data?.descartadas.length ?? 0;
 
   return (
     <section className="mis-recetas" aria-labelledby="mis-recetas-titulo" aria-busy={misRecetas.isFetching}>
@@ -105,13 +109,21 @@ export function ListaMisRecetas({ accion, children }) {
         </p>
       )}
 
+      {/* Bonus: recetas que Zod ha rechazado al validar la respuesta del API. */}
+      {descartadas > 0 && (
+        <p className="aviso fallo" role="status">
+          ⚠ {descartadas} {descartadas === 1 ? 'recipe was' : 'recipes were'} hidden because the data
+          from the server is corrupted.
+        </p>
+      )}
+
       {misRecetas.isSuccess && total === 0 && (
         <p className="estado">No recipes yet. Share your first one above! 👆</p>
       )}
 
       {misRecetas.isSuccess && total > 0 && (
         <div className="rejilla">
-          {misRecetas.data.map((receta) => (
+          {misRecetas.data.recetas.map((receta) => (
             <TarjetaMiReceta key={receta.id} receta={receta} />
           ))}
         </div>

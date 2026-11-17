@@ -108,3 +108,11 @@ Cada entrada lleva la fecha, mi prompt copiado literalmente (con sus erratas), q
 - **Qué hizo:** Creó `MisRecetas.jsx`, que guarda si el formulario está abierto y pone el botón «+ Add recipe» (cambia a «✕ Close form») en la cabecera del listado. Las recetas siguen siempre a la vista y el formulario se despliega entre la cabecera y la lista. Cuidó la usabilidad: el formulario se oculta en vez de borrarse, así que no se pierde lo escrito; al abrirlo el foco va a «Recipe name» y al cerrarlo vuelve al botón; el botón usa `aria-expanded`. Añadió un botón «Cancel» dentro del formulario, pasó su título a `h3` y añadió los estilos. Lint y build correctos.
 - **Archivos tocados:** `src/components/MisRecetas.jsx` (nuevo), `src/components/ListaMisRecetas.jsx`, `src/components/FormularioReceta.jsx`, `src/App.jsx`, `src/App.css`, `CLAUDE.md`, `PROMPTS.md`.
 - **Cambios / rechazos:** **Cambié** el diseño del paso 4, en el que el formulario estaba siempre visible encima del listado.
+
+## 14. Bonus: validar la respuesta del API con Zod
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > si, vamos con el bonus
+- **Qué hizo:** Creó `esquemaRecetaGuardada`, el esquema de lo que devuelve la API, que reutiliza las opciones de `opciones.js`. En el servicio `obtenerMisRecetas`, que es la `queryFn`, validó con `safeParse` cada receta que llega: las válidas se muestran y las corruptas se descartan, con el detalle en la consola (`z.prettifyError`) y un aviso en pantalla. También validó la respuesta del POST en `crearReceta`. Adaptó `ListaMisRecetas` al nuevo formato `{ recetas, descartadas }` y le añadió el aviso. Metió en `db.json` una receta corrupta de demo (dificultad inexistente, tiempo como texto, ingredientes como texto, imagen `javascript:`, alérgeno inventado y fecha mal escrita) y comprobó con un script que Zod la descarta con 6 errores y deja pasar la buena. Lint y build correctos, y json-server ya sirve la receta corrupta.
+- **Archivos tocados:** `src/schemas/receta.js`, `src/services/misRecetas.js`, `src/components/ListaMisRecetas.jsx`, `db.json`, `CLAUDE.md`, `PROMPTS.md`. El script de prueba quedó fuera del repo (carpeta temporal).
+- **Cambios / rechazos:** Ninguno.

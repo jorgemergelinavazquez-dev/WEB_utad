@@ -20,6 +20,21 @@
       ],
       "creadaEn": "2026-11-17T17:08:52.776Z",
       "id": "TNbZULa1RN4"
+    },
+    {
+      "id": "receta-corrupta-demo",
+      "nombre": "Corrupted recipe (bonus demo)",
+      "email": "chef@example.com",
+      "categoria": "Dessert",
+      "dificultad": "impossible",
+      "dieta": "none",
+      "tiempo": "twenty",
+      "raciones": 4,
+      "ingredientes": "sugar, flour",
+      "instrucciones": "This record is broken on purpose to show that Zod catches it.",
+      "imagen": "javascript:alert('xss')",
+      "alergenos": ["gluten"],
+      "creadaEn": "yesterday"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

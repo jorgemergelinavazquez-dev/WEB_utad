@@ -15,6 +15,7 @@ import {
 } from './opciones.js';
 
 const URL_WEB = /^https?:\/\/\S+$/;
+const esImagenValida = (url) => url === '' || (URL_WEB.test(url) && URL.canParse(url));
 
 // --- Campos sueltos ---------------------------------------------------------
 
@@ -78,7 +79,7 @@ const campos = z.object({
   imagen: z
     .string()
     .trim()
-    .refine((url) => url === '' || (URL_WEB.test(url) && URL.canParse(url)), {
+    .refine(esImagenValida, {
       error: 'Use a full link starting with http:// or https://',
     }),
 
@@ -114,6 +115,27 @@ export const esquemaReceta = campos
     when: sonValidos('dieta', 'categoria'),
     error: (issue) => `A ${issue.input.categoria} recipe can’t be vegetarian or vegan.`,
   });
+
+// --- Lo que DEVUELVE la API (bonus) -----------------------------------------
+// No nos fiamos del servidor: cada receta que llega se valida antes de pintarla.
+// No es el mismo esquema que el del formulario: aquí los datos ya vienen
+// transformados (números, arrays), y además llevan id y fecha.
+// Comparte con el formulario las listas de opciones (opciones.js).
+export const esquemaRecetaGuardada = z.object({
+  id: z.union([z.string(), z.number()]).transform(String),
+  nombre: z.string().min(1).max(60),
+  email: z.email().optional(), // se guarda, pero nunca se muestra
+  categoria: z.enum(CATEGORIAS),
+  dificultad: z.enum(valores(DIFICULTADES)),
+  dieta: z.enum(valores(DIETAS)),
+  tiempo: z.number().int().positive(),
+  raciones: z.number().int().positive(),
+  ingredientes: z.array(z.string()),
+  instrucciones: z.string(),
+  imagen: z.string().refine(esImagenValida, { error: 'Image must be empty or an http(s) link.' }),
+  alergenos: z.array(z.enum(valores(ALERGENOS))),
+  creadaEn: z.iso.datetime(),
+});
 
 // Valores iniciales del formulario (RHF defaultValues). Todo vacío salvo la dieta.
 export const recetaVacia = {
