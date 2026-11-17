@@ -9,6 +9,7 @@ import { FiltroCategoria } from './components/FiltroCategoria';
 import { ListaRecetas } from './components/ListaRecetas';
 import { DetalleReceta } from './components/DetalleReceta';
 import { BotonTema } from './components/BotonTema';
+import { FormularioReceta } from './components/FormularioReceta';
 
 // Si el usuario nunca ha elegido tema, usamos el de su sistema operativo.
 const temaDelSistema = () =>
@@ -96,29 +97,35 @@ function App() {
 
       <div className="barra">
         <Pestanas vista={vista} totalFavoritas={favoritas.length} onCambiar={setVista} />
-        {categorias.length > 1 && (
+        {vista !== 'mias' && categorias.length > 1 && (
           <FiltroCategoria categorias={categorias} valor={categoriaActiva} onCambiar={setCategoria} />
         )}
       </div>
 
       <main>
-        {vista === 'resultados' && cargando && <p className="estado">Loading recipes… ⏳</p>}
-        {vista === 'resultados' && error && (
-          <p className="estado error" role="alert">
-            {error.message}{' '}
-            <button type="button" onClick={() => consulta.refetch()}>
-              Try again
-            </button>
-          </p>
-        )}
-        {(vista === 'favoritas' || (!cargando && !error)) && (
-          <ListaRecetas
-            recetas={visibles}
-            idsFavoritas={idsFavoritas}
-            mensajeVacio={mensajeVacio}
-            onAbrir={setIdAbierta}
-            onAlternarFavorita={alternarFavorita}
-          />
+        {vista === 'mias' ? (
+          <FormularioReceta />
+        ) : (
+          <>
+            {vista === 'resultados' && cargando && <p className="estado">Loading recipes… ⏳</p>}
+            {vista === 'resultados' && error && (
+              <p className="estado error" role="alert">
+                {error.message}{' '}
+                <button type="button" onClick={() => consulta.refetch()}>
+                  Try again
+                </button>
+              </p>
+            )}
+            {(vista === 'favoritas' || (!cargando && !error)) && (
+              <ListaRecetas
+                recetas={visibles}
+                idsFavoritas={idsFavoritas}
+                mensajeVacio={mensajeVacio}
+                onAbrir={setIdAbierta}
+                onAlternarFavorita={alternarFavorita}
+              />
+            )}
+          </>
         )}
       </main>
 
