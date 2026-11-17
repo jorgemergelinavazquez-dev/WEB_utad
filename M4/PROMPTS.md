@@ -68,3 +68,19 @@ Cada entrada lleva la fecha, mi prompt copiado literalmente (con sus erratas), q
 - **Qué hizo:** Creó este archivo con los prompts de la sesión desde el principio y añadió al `CLAUDE.md` la norma de ir completándolo después de cada petición.
 - **Archivos tocados:** `PROMPTS.md` (nuevo), `CLAUDE.md`.
 - **Cambios / rechazos:** Ninguno.
+
+## 9. Siguiente paso
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > cual es el siguiente paso a seguir?
+- **Qué hizo:** Indicó que el siguiente paso es el 3, el esquema Zod (`src/schemas/receta.js`). Recordó hacer antes los commits pendientes y volvió a presentar los campos propuestos para que Jorge los confirme. Como categorías propuso las mismas de TheMealDB.
+- **Archivos tocados:** `PROMPTS.md`.
+- **Cambios / rechazos:** Ninguno.
+
+## 10. Esquema Zod con alérgenos y dieta
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > añade tmb un z.enum con alergenos, y supongo q abra que crear un sitio donde guardar las posibes alergias, crealo para que las posibles alergias sean (Trigo,Lactosa,Frutos secos, mariscos,pescados,fruta/verdura,carne y huevos) y tambien un checkbox para marcar si la receta es vegana,vejetariana o ninguna, recuarda que la web esta en ingles y por tanto las alergias tmb tienen que estarlo
+- **Qué hizo:** Creó `src/schemas/opciones.js`, el sitio donde se guardan las opciones fijas: categorías, dificultades, dietas y alérgenos, con el valor y la etiqueta en inglés (Wheat, Lactose, Nuts, Shellfish, Fish, Fruit & vegetables, Meat, Eggs), y qué alérgenos prohíbe cada dieta. Creó `src/schemas/receta.js` con el esquema completo y mensajes propios en inglés. Tiene dos `.refine` con `path` y `when`: una dieta vegetariana o vegana no puede tener alérgenos incompatibles (el mensaje dice cuáles), y una categoría con carne (Beef, Chicken…) no puede ser vegetariana. Lo probó con un script de 7 casos (vacío, válido, vegana con huevos, el refine saltando aunque el resto esté vacío, Beef vegetariano, email mal + `javascript:` en la imagen, decimales y fuera de rango) y pasó el lint.
+- **Archivos tocados:** `src/schemas/opciones.js` (nuevo), `src/schemas/receta.js` (nuevo), `CLAUDE.md`, `PROMPTS.md`. El script de prueba quedó fuera del repo (carpeta temporal).
+- **Cambios / rechazos:** **Cambié** la propuesta inicial: en vez de un checkbox «Vegetarian» con refine sobre los ingredientes, pedí un `z.enum` de alérgenos y una opción vegana / vegetariana / ninguna. La IA hizo la dieta con radios en vez de checkbox porque las opciones se excluyen entre sí, y pasó el refine a comparar la dieta con los alérgenos.
