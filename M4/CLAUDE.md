@@ -83,6 +83,7 @@ Un formulario serio de **registro + listado**: «Sube tu receta» que se valida,
 - Los comandos de terminal piden permiso a Jorge; leer archivos no. Agrupar comandos para pedir permiso las menos veces posibles.
 - **Registro de prompts (obligatorio):** después de cada petición de Jorge, añadir una entrada al final de `M4/PROMPTS.md` con: fecha, su prompt literal (copiado tal cual, con erratas), qué hizo la IA, qué archivos se tocaron y si Jorge cambió o rechazó algo (incluidos los permisos de herramientas rechazados). Seguir la numeración y el formato de las entradas que ya hay. Enlazarlo desde la declaración de IA del README.
 - Si Jorge edita este archivo con otra herramienta, comprobar que no se pierden las secciones de progreso.
+- La sección «Uso de IA» del `README.md` la ha editado Jorge a mano (2026-11-17): no reescribirla; si hay que tocar el README, leerlo antes y respetar sus cambios.
 
 ## Entrega
 - Actualizar `README.md` a M4 (ahora mismo todavía describe la M3): qué es, cómo arrancar (incluido json-server si se usa), estructura, y **declaración de uso de IA**.

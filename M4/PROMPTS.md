@@ -124,3 +124,11 @@ Cada entrada lleva la fecha, mi prompt copiado literalmente (con sus erratas), q
 - **Qué hizo:** Cambió el email real de la receta de prueba de `db.json` por `chef@example.com`. Revisó el repo: todos los commits estaban al día, `dist/` y `.env` los ignora el `.gitignore` y `.claude/settings.local.json` el gitignore global. Reescribió el `README.md` para la M4: qué es, cómo arrancarlo con dos terminales (`npm run api` + `npm run dev`), la estructura, el formulario con RHF y Zod, la accesibilidad, TanStack Query, el bonus con la tabla de la receta corrupta, la seguridad y la declaración de uso de IA enlazando a este archivo. En la verificación solo puso lo que Jorge había confirmado que probó.
 - **Archivos tocados:** `db.json`, `README.md`, `CLAUDE.md`, `PROMPTS.md`.
 - **Cambios / rechazos:** Ninguno.
+
+## 16. README editado por mí
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > he modificado el readmi para añair el uso de IA, no te rayes
+- **Qué hizo:** Nada en el README: lo dejó tal como lo dejé yo. Solo apuntó en el `CLAUDE.md` que esa sección la he editado a mano y que no se debe sobrescribir.
+- **Archivos tocados:** `CLAUDE.md`, `PROMPTS.md`.
+- **Cambios / rechazos:** **Cambié** a mano la sección «Uso de IA» del `README.md` que había escrito la IA.

@@ -113,3 +113,16 @@ Sin esta validación, la lista entera se rompería (el componente hace `ingredie
     - *"añade tmb un z.enum con alergenos, y supongo q abra que crear un sitio donde guardar las posibes alergias […] recuarda que la web esta en ingles y por tanto las alergias tmb tienen que estarlo"*
     - *"vale, quiero que en my recipis aparezcan las recetas como ahora, pero el form se despliegue conn un boto de "+ add recipy""*
 - **Cómo lo verifiqué:** después de cada paso la IA pasó `npm run lint` y `npm run build`. El esquema Zod se probó con un script de casos (formulario vacío, receta válida, vegana con huevos, Beef vegetariano, email mal escrito, imagen `javascript:`, decimales y fuera de rango), y el esquema de respuesta con las recetas de `db.json`. Yo probé el formulario en el navegador con `npm run api` y `npm run dev` y guardé una receta de prueba, que se quedó en `db.json`.
+
+## Autopsia
+1. **Decisión 1: la respuesta del API se valida receta a receta, no la lista entera de golpe.**
+   - **Alternativa descartada:** hacer `z.array(esquemaRecetaGuardada).parse(datos)` en la `queryFn`, que es lo más directo.
+   - **Por qué tomé esta decisión:** con `parse` sobre el array, una sola receta rota hace que falle toda la query y el usuario se queda sin ver ninguna de sus recetas, solo un error. Con `safeParse` en cada una, las buenas se siguen viendo, la rota se descarta y sale un aviso diciendo cuántas se han ocultado. Lo malo es que una receta descartada no se puede arreglar desde la web (hay que tocar `db.json`), pero eso es un problema del servidor, no del usuario.
+
+2. **Decisión 2: la dieta es un grupo de radios (ninguna / vegetariana / vegana) y no un checkbox de "vegetariana".**
+   - **Alternativa descartada:** el checkbox *Vegetarian* que me propuso la IA al principio.
+   - **Por qué tomé esta decisión:** una receta no puede ser vegetariana y vegana a la vez, así que las opciones son excluyentes y eso es justo para lo que sirven los radios. Además, con la vegana el `.refine` tiene más sentido, porque cada dieta prohíbe unos alérgenos distintos (la vegetariana no deja meter carne, pescado ni marisco, y la vegana tampoco huevos ni lactosa).
+
+3. **Decisión 3: el formulario se oculta con `hidden` en vez de desmontarlo.**
+   - **Alternativa descartada:** pintarlo solo cuando está abierto (`{abierto && <FormularioReceta />}`).
+   - **Por qué tomé esta decisión:** si se desmonta, React Hook Form pierde todo lo escrito, y si alguien cierra el formulario sin querer a mitad de una receta tiene que empezar de cero. Con `hidden` sigue montado pero no se ve ni se puede llegar a él con el teclado. El precio es que el formulario existe aunque no se use, pero es un componente pequeño y no se nota.
