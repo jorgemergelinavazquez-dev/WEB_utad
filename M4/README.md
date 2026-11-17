@@ -1,74 +1,115 @@
-# M3 - Reactor Core: Recipe Box en React
+# M4 - Full Contact Forms: Recipe Box con formulario
 
 ## Qué es el proyecto
-Es mi app de la misión M2 (*Async Odyssey*, el buscador de recetas con la API de [TheMealDB](https://www.themealdb.com/api.php)) rehecha en React 19 con Vite. Hace lo mismo que antes y alguna cosa más, pero ya no toco el DOM a mano: guardo el estado y React pinta lo que toca.
+Es mi Recipe Box de la M3 (el buscador de recetas de [TheMealDB](https://www.themealdb.com/api.php) hecho en React 19 + Vite) con una parte nueva: **«My recipes»**, donde puedes subir tus propias recetas con un formulario. El formulario se valida con Zod, se envía con un POST a una API y la receta aparece al momento en tu listado.
 
-La web está en inglés a propósito. La API solo tiene las recetas en inglés, y si buscabas "lasaña" o "puré de calabaza" no salía nada. Con toda la interfaz en inglés se entiende desde el principio que hay que buscar en inglés.
+La web sigue en inglés a propósito: TheMealDB solo tiene recetas en inglés, y así se entiende desde el principio que hay que buscar en inglés. El código, los comentarios y este README están en español.
 
 Qué se puede hacer:
-- Buscar recetas por nombre, en inglés: *chicken*, *lasagna*, *pumpkin*… Si tarda sale un mensaje de carga, y si falla o no encuentra nada también te avisa.
-- Pulsar 🎲 Surprise me para que salga una receta aleatoria.
-- Filtrar por categoría. Las opciones del desplegable salen de las recetas que tienes en pantalla.
-- Abrir una receta para ver los ingredientes con sus cantidades y cómo se prepara. Se cierra con la ✕, pinchando fuera o con `Escape`.
-- Guardar favoritas con la ★. Se quedan guardadas en `localStorage` aunque recargues.
-- Repetir una búsqueda sin volver a llamar a la API, porque mantengo la caché que hice como reto extra en M2.
-- Cambiar entre tema claro y oscuro con el botón de arriba a la derecha. La primera vez coge el tema del sistema operativo, y luego se acuerda de lo que elegiste.
+- **Buscar recetas** por nombre en inglés (*chicken*, *lasagna*…) o pulsar 🎲 *Surprise me* para una aleatoria. Si tarda sale un mensaje de carga, y si falla te avisa con un botón *Try again*.
+- **Filtrar por categoría**, abrir una receta para ver ingredientes y preparación, guardar **favoritas** (★, se quedan en `localStorage`) y cambiar entre **tema claro y oscuro**.
+- **Subir tu receta** en la pestaña ✍️ *My recipes* con el botón **+ Add recipe**: nombre, email, categoría, dificultad, tiempo, raciones, dieta (ninguna / vegetariana / vegana), **alérgenos**, ingredientes, instrucciones y una foto opcional.
+- **Ver tus recetas** en tarjetas con su dificultad, tiempo, raciones, un sello 🌱 si es vegetariana o vegana, los alérgenos como etiquetas y los ingredientes e instrucciones desplegables.
 
 ## Cómo arrancar el proyecto
-1. Clona o descarga el repositorio.
-2. Abre la terminal en la carpeta `M3`.
-3. Instala las dependencias con `npm install`.
-4. Levanta el servidor con `npm run dev`.
-5. Abre en el navegador la dirección que te dé la terminal (por defecto http://localhost:5173/).
+Hacen falta **dos terminales**, una para la API y otra para la web.
+
+1. Clona el repositorio y abre la terminal en la carpeta `M4`.
+2. Instala las dependencias: `npm install`.
+3. Copia `.env.example` como `.env` (tiene las URLs de las dos APIs; no hay ningún secreto).
+4. **Terminal 1:** levanta la API con `npm run api`. Es [json-server](https://github.com/typicode/json-server) en http://localhost:3001 y guarda las recetas en `db.json`.
+5. **Terminal 2:** levanta la web con `npm run dev` y abre la dirección que te dé (por defecto http://localhost:5173/).
+
+Si no arrancas la API, la búsqueda de TheMealDB funciona igual, pero *My recipes* te enseñará un mensaje de error con *Try again*.
+
+¿Por qué json-server y no JSONPlaceholder? Porque JSONPlaceholder responde al POST pero no guarda nada, así que después de enviar el formulario la receta no aparecería en el listado y no se notaría la invalidación de la caché.
 
 ## Estructura
 
 ```
-src/
-├── main.jsx                 Punto de entrada
-├── App.jsx                  Estado de la app y composición de componentes
-├── api.js                   URLs de TheMealDB y transformación de los datos
-├── hooks/
-│   ├── useFetch.js          Hook reutilizable: petición + caché + cancelación
-│   └── useLocalStorage.js   Hook reutilizable: useState que persiste
-└── components/
-    ├── Buscador.jsx         Formulario (controla su propio texto)
-    ├── Pestanas.jsx         Resultados / Favoritas
-    ├── FiltroCategoria.jsx  Select de categorías
-    ├── ListaRecetas.jsx     Rejilla o mensaje si está vacía
-    ├── TarjetaReceta.jsx    Una receta + botón de favorita
-    ├── BotonTema.jsx        Botón de claro / oscuro
-    └── DetalleReceta.jsx    Ventana con ingredientes y preparación
+M4/
+├── db.json                     "Base de datos" de json-server (colección recetas)
+├── .env.example                Plantilla de variables VITE_ (URLs de las APIs)
+├── PROMPTS.md                  Registro de todos los prompts que usé con la IA
+└── src/
+    ├── main.jsx                QueryClientProvider + React Query Devtools
+    ├── App.jsx                 Estado de la app, búsqueda con useQuery y vistas
+    ├── services/               Los ÚNICOS archivos que hacen fetch
+    │   ├── http.js             pedirJSON: fetch + comprobar r.ok + errores legibles
+    │   ├── mealdb.js           TheMealDB: buscar, aleatoria y transformar datos
+    │   └── misRecetas.js       json-server: GET y POST, validando la respuesta con Zod
+    ├── schemas/
+    │   ├── opciones.js         Categorías, dificultades, dietas y alérgenos (un solo sitio)
+    │   └── receta.js           Esquema del formulario y esquema de la respuesta del API
+    ├── hooks/
+    │   └── useLocalStorage.js  useState que persiste (favoritas y tema)
+    └── components/
+        ├── Buscador.jsx        Búsqueda + Surprise me
+        ├── Pestanas.jsx        Results / Favorites / My recipes
+        ├── FiltroCategoria.jsx Select de categorías
+        ├── ListaRecetas.jsx    Rejilla de recetas de TheMealDB
+        ├── TarjetaReceta.jsx   Una receta + botón de favorita
+        ├── DetalleReceta.jsx   Ventana con ingredientes y preparación
+        ├── BotonTema.jsx       Claro / oscuro
+        ├── MisRecetas.jsx      Vista My recipes: botón + Add recipe y formulario desplegable
+        ├── FormularioReceta.jsx Formulario con React Hook Form + useMutation
+        └── ListaMisRecetas.jsx Listado con useQuery y estados de carga / error / vacío
 ```
 
-`api.js` junta lo que en M2 eran `api.js` y `transform.js`, pero ahora solo prepara las URLs y limpia los datos. La petición la hace el hook `useFetch`.
+## El formulario: React Hook Form + Zod
+- Es un formulario **no controlado**: React Hook Form lee los campos con `register` y envía con `handleSubmit`. Tiene `noValidate` (para que no salgan los globos del navegador), `defaultValues` y `reset()` después de guardar.
+- **Zod es la única fuente de verdad.** En el componente no hay ni una regla de validación: todo está en `src/schemas/receta.js` y se conecta con `zodResolver`. Los mensajes de error son propios (en inglés, porque los ve el usuario).
+- Algunas cosas del esquema:
+  - `z.email()` con un mensaje distinto si el campo está vacío o si está mal escrito.
+  - `z.coerce.number()` para el tiempo y las raciones, porque los inputs numéricos devuelven texto.
+  - Los ingredientes se escriben uno por línea y Zod los convierte en un array (`.transform().pipe()`).
+  - La foto solo admite enlaces `http://` o `https://`.
+  - **Dos `.refine` entre campos**: una receta vegetariana o vegana no puede tener alérgenos incompatibles (el mensaje dice cuáles, p. ej. *"A vegan recipe can't contain: Eggs, Lactose."*), y una categoría con carne (Beef, Chicken…) no puede ser vegetariana.
+- Esos dos refines usan `when` para que el error salga aunque el resto del formulario esté a medias (por defecto Zod no ejecuta un refine del objeto si hay otros errores), y en el formulario los campos relacionados usan `deps`, así que el error se recalcula al cambiar la dieta, la categoría o los alérgenos.
+- Las opciones (categorías, dietas, alérgenos…) están en `src/schemas/opciones.js`. El esquema las usa para validar y el formulario para pintar los campos, así que añadir un alérgeno es tocar una línea.
 
-## Estado y efectos
-En `App` solo guardo lo que decide el usuario: qué ha buscado (`peticion`), en qué pestaña está (`vista`), la categoría elegida, qué receta tiene abierta (`idAbierta`), sus favoritas y el tema. Todo lo demás lo calculo en el render cada vez: la URL, la lista ya transformada, las categorías, la lista filtrada y la receta abierta. Hasta el "cargando" sale de ahí (lo explico en la Autopsia).
+### Accesibilidad
+- Cada campo tiene su `<label htmlFor>`; la dificultad, la dieta y los alérgenos van en `<fieldset>` con `<legend>`.
+- Los campos con error llevan `aria-invalid` y `aria-describedby` apuntando a su ayuda y a su mensaje; los mensajes tienen `role="alert"`.
+- El éxito se anuncia con `role="status"` y el error del servidor con `role="alert"`.
+- Al enviar con errores, el foco va al primer campo mal. Al abrir el formulario el foco va al primer campo, y al cerrarlo vuelve al botón.
+- El botón de enviar solo se deshabilita **mientras se envía** (*Saving…*), nunca "hasta que sea válido".
+- Todo se puede usar con teclado y el foco se ve bien. Los errores no se marcan solo con color: también hay borde, icono y texto.
 
-Hay cinco `useEffect` y los cinco hablan con algo de fuera de React:
-1. En `useFetch`, la petición a la API. Lleva limpieza con `AbortController`, así que si buscas dos cosas seguidas la respuesta de la primera no pisa a la segunda.
-2. En `useLocalStorage`, guardar el valor cada vez que cambia.
-3. En `DetalleReceta`, escuchar la tecla `Escape`. Al cerrar la ventana quito el listener.
-4. En `App`, poner la búsqueda en el título de la pestaña del navegador.
-5. En `App`, poner el tema como atributo `data-tema` en `<html>`. Los colores son variables CSS, así que con cambiar ese atributo cambia toda la página sin que ningún componente tenga que saber qué tema hay puesto.
+## Peticiones: TanStack Query
+- `useFetch` (el `useEffect` + `fetch` de la M3) ya no existe: ahora todo va con **TanStack Query v5**.
+- Los componentes nunca hacen `fetch`: llaman a funciones de `src/services/`, que comprueban `r.ok` y lanzan un `Error` con un mensaje que se puede enseñar al usuario (recordatorio: `fetch` no falla con un 404 o un 500).
+- **Claves:** `['recetas', texto]` para cada búsqueda, `['aleatoria', n]` para cada sorpresa y `['misRecetas']` para el listado. La búsqueda usa `enabled` para no pedir nada hasta que el usuario busca algo.
+- **Mutación:** el formulario usa `useMutation` con `crearReceta` (POST con `Content-Type: application/json` y `JSON.stringify`). En `onSuccess` hace `invalidateQueries({ queryKey: ['misRecetas'] })`, y el listado se vuelve a pedir solo. Se ve un momento el aviso *Updating…*.
+- **Estados:** carga (`isPending`), error con *Try again* (`refetch`), lista vacía, actualizando (`isFetching`) y éxito del envío.
 
-Como keys de las listas uso el `idMeal` de cada receta, el nombre de la categoría y la posición del ingrediente dentro de la receta (va del 1 al 20 en la API). En ningún sitio uso el índice del `map`. Tampoco muto nada: las favoritas se actualizan con `filter` o con *spread*, y las categorías se ordenan sobre una copia.
+## Bonus: validar la respuesta del API con Zod
+No me fío de lo que llega del servidor. La `queryFn` de *My recipes* (`obtenerMisRecetas`) valida **cada receta** con `esquemaRecetaGuardada.safeParse()`. Las válidas se muestran; las que no cumplen el esquema se descartan, en pantalla sale el aviso *"⚠ 1 recipe was hidden because the data from the server is corrupted."* y en la consola del navegador aparece el detalle con `z.prettifyError`. La respuesta del POST también se valida.
 
-Para el bonus he sacado dos custom hooks, `useFetch` y `useLocalStorage`. Los dos se pueden usar tal cual en otra app.
+**Demo:** en `db.json` hay a propósito una receta rota, `receta-corrupta-demo`:
+
+| Campo | Valor corrupto | Lo que dice Zod |
+|---|---|---|
+| `dificultad` | `"impossible"` | no es easy / medium / hard |
+| `tiempo` | `"twenty"` | esperaba un número |
+| `ingredientes` | `"sugar, flour"` | esperaba un array |
+| `imagen` | `"javascript:alert('xss')"` | solo admite http(s) |
+| `alergenos` | `["gluten"]` | no está en la lista |
+| `creadaEn` | `"yesterday"` | no es una fecha ISO |
+
+Sin esta validación, la lista entera se rompería (el componente hace `ingredientes.map(...)` y un texto no tiene `map`), y además un `javascript:` podría acabar en un `src`. Para verlo: abre *My recipes* con la consola abierta (F12). Si borras esa receta de `db.json`, el aviso desaparece.
+
+## Seguridad
+- La validación del cliente es para que el usuario tenga una buena experiencia, **no es seguridad**: cualquiera puede saltársela y llamar a la API directamente. Por eso también valido lo que vuelve del servidor.
+- No uso `dangerouslySetInnerHTML` en ningún sitio, y las imágenes solo se pintan si su URL empieza por `http(s)://`.
+- El email se guarda pero no se muestra en las tarjetas.
+- En `.env` solo hay URLs públicas (todo lo que empieza por `VITE_` acaba en el navegador). El `.env` no se sube; se sube `.env.example` como plantilla.
 
 ## Uso de IA
-- **Qué pedí:** le pedí a Claude que pasara mi buscador de recetas de M2 a React siguiendo la rúbrica, aprovechando mi `api.js` y mi `transform.js`. Después le fui pidiendo cambios según probaba la app. (El primer commit de esta rama tiene un quiz de otro ejercicio que subí por error. Lo borré en el siguiente commit.)
+- **Herramienta:** Claude Code (modelo Claude Opus 5.5) dentro de VS Code. El profesor pide programar con IA, así que el código lo ha escrito la IA y mi parte ha sido decidir qué quería, revisar lo que hacía, probarlo y entenderlo.
+- **Qué pedí:** primero que leyera el `CLAUDE.md` (donde tengo apuntada la rúbrica y cómo quiere el tema que se haga) y me propusiera un plan. Luego lo fuimos haciendo paso a paso: json-server, capa de servicios, esquema Zod, formulario, listado y bonus. Por el camino cambié cosas: pedí añadir los **alérgenos** y la opción **vegana / vegetariana / ninguna** en lugar del checkbox de "vegetariana" que me propuso, y que el formulario se **desplegara con un botón "+ Add recipe"** en vez de estar siempre visible.
+- **Registro completo de prompts:** está en [`PROMPTS.md`](PROMPTS.md), con la fecha, mi prompt tal cual, qué hizo la IA, qué archivos tocó y qué le cambié o rechacé.
 - **Ejemplos de prompts utilizados:**
-    - *"Quiero que cambies dos cosas. Que, por un lado, los colores no sean negro y amarillo, porque son horribles. Haz algo más neutro. Y además quiero que tenga un botón para cambiar entre claro y oscuro."*
-    - *"Vale, como la API está en inglés, quiero que la web también esté en inglés, así se intuye desde el principio que tienes que escribir en inglés."*
-- **Cómo lo verifiqué:** se probó en el navegador con respuestas de la API simuladas: búsqueda, filtro, abrir y cerrar la receta (también con `Escape`), favoritas después de recargar, caché, búsqueda sin resultados, error del servidor, cambio de tema y vista de móvil. Luego la arranqué yo con `npm run dev` y probé búsquedas reales. Al buscar "lasaña" o "puré de calabaza" no salía nada, y así me di cuenta de que la API solo funciona en inglés. Por eso pedí poner la web en inglés.
-
-## Autopsia
-1. **Decisión 1: `cargando` se calcula, no tiene su propio estado.**
-   - **Alternativa descartada:** el `useFetch` de siempre, con tres `useState` (`datos`, `cargando` y `error`) y un `setCargando(true)` al principio del efecto.
-   - **Por qué tomé esta decisión:** con tres estados pueden quedar descuadrados entre sí, y cambiar el estado dentro del efecto provoca un render de más. Lo que hago es guardar junto a la respuesta la URL de la que viene. Si no coincide con la URL actual es que todavía está cargando. Me ahorro un estado y no hay forma de que se desincronice.
-
-2. **Decisión 2: las favoritas se guardan enteras, no solo su id.**
-   - **Alternativa descartada:** guardar solo los `id` en `localStorage` y pedir cada receta a la API (`lookup.php`) al entrar en la pestaña de favoritas.
-   - **Por qué tomé esta decisión:** así las favoritas salen al momento y funcionan sin conexión, y no necesito otro `useEffect` lanzando una petición por cada una. Lo malo es que si una receta cambia en la API, la copia guardada no se actualiza. Pero si alguien guarda una receta en favoritas es porque le gustó tal como estaba, así que no me parece un problema.
+    - *"añade tmb un z.enum con alergenos, y supongo q abra que crear un sitio donde guardar las posibes alergias […] recuarda que la web esta en ingles y por tanto las alergias tmb tienen que estarlo"*
+    - *"vale, quiero que en my recipis aparezcan las recetas como ahora, pero el form se despliegue conn un boto de "+ add recipy""*
+- **Cómo lo verifiqué:** después de cada paso la IA pasó `npm run lint` y `npm run build`. El esquema Zod se probó con un script de casos (formulario vacío, receta válida, vegana con huevos, Beef vegetariano, email mal escrito, imagen `javascript:`, decimales y fuera de rango), y el esquema de respuesta con las recetas de `db.json`. Yo probé el formulario en el navegador con `npm run api` y `npm run dev` y guardé una receta de prueba, que se quedó en `db.json`.

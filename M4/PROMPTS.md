@@ -116,3 +116,11 @@ Cada entrada lleva la fecha, mi prompt copiado literalmente (con sus erratas), q
 - **Qué hizo:** Creó `esquemaRecetaGuardada`, el esquema de lo que devuelve la API, que reutiliza las opciones de `opciones.js`. En el servicio `obtenerMisRecetas`, que es la `queryFn`, validó con `safeParse` cada receta que llega: las válidas se muestran y las corruptas se descartan, con el detalle en la consola (`z.prettifyError`) y un aviso en pantalla. También validó la respuesta del POST en `crearReceta`. Adaptó `ListaMisRecetas` al nuevo formato `{ recetas, descartadas }` y le añadió el aviso. Metió en `db.json` una receta corrupta de demo (dificultad inexistente, tiempo como texto, ingredientes como texto, imagen `javascript:`, alérgeno inventado y fecha mal escrita) y comprobó con un script que Zod la descarta con 6 errores y deja pasar la buena. Lint y build correctos, y json-server ya sirve la receta corrupta.
 - **Archivos tocados:** `src/schemas/receta.js`, `src/services/misRecetas.js`, `src/components/ListaMisRecetas.jsx`, `db.json`, `CLAUDE.md`, `PROMPTS.md`. El script de prueba quedó fuera del repo (carpeta temporal).
 - **Cambios / rechazos:** Ninguno.
+
+## 15. Cierre: email de prueba y README
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > si, cambia el email y vamos con el cierre
+- **Qué hizo:** Cambió el email real de la receta de prueba de `db.json` por `chef@example.com`. Revisó el repo: todos los commits estaban al día, `dist/` y `.env` los ignora el `.gitignore` y `.claude/settings.local.json` el gitignore global. Reescribió el `README.md` para la M4: qué es, cómo arrancarlo con dos terminales (`npm run api` + `npm run dev`), la estructura, el formulario con RHF y Zod, la accesibilidad, TanStack Query, el bonus con la tabla de la receta corrupta, la seguridad y la declaración de uso de IA enlazando a este archivo. En la verificación solo puso lo que Jorge había confirmado que probó.
+- **Archivos tocados:** `db.json`, `README.md`, `CLAUDE.md`, `PROMPTS.md`.
+- **Cambios / rechazos:** Ninguno.
