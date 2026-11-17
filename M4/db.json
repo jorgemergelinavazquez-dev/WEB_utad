@@ -1,3 +1,26 @@
 {
-  "recetas": []
+  "recetas": [
+    {
+      "nombre": "tortilla de patatas",
+      "email": "belenchu017@gmail.com",
+      "categoria": "Side",
+      "dificultad": "medium",
+      "dieta": "vegetarian",
+      "tiempo": 120,
+      "raciones": 4,
+      "ingredientes": [
+        "Patata",
+        "Huevo",
+        "aceite"
+      ],
+      "instrucciones": "saber cocinar y  no echar cebolla",
+      "imagen": "",
+      "alergenos": [
+        "eggs"
+      ],
+      "creadaEn": "2026-11-17T17:08:52.776Z",
+      "id": "TNbZULa1RN4"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

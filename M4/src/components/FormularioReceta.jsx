@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,7 +31,8 @@ const Obligatorio = () => (
   </span>
 );
 
-export function FormularioReceta() {
+// "abierto" lo controla MisRecetas (botón "+ Add recipe"); "onCerrar" lo pliega.
+export function FormularioReceta({ abierto, onCerrar }) {
   const queryClient = useQueryClient();
 
   // Formulario NO controlado: RHF lee los inputs con register, sin un useState por campo.
@@ -39,6 +41,7 @@ export function FormularioReceta() {
     register,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(esquemaReceta),
@@ -46,6 +49,11 @@ export function FormularioReceta() {
     mode: 'onTouched', // valida al salir de cada campo y, desde ahí, mientras escribes
     // shouldFocusError (true por defecto): al enviar con errores, el foco va al primer campo mal.
   });
+
+  // Al desplegar el formulario, el foco va directo al primer campo.
+  useEffect(() => {
+    if (abierto) setFocus('nombre');
+  }, [abierto, setFocus]);
 
   const guardar = useMutation({
     mutationFn: crearReceta,
@@ -71,8 +79,8 @@ export function FormularioReceta() {
   });
 
   return (
-    <section className="compartir" aria-labelledby="compartir-titulo">
-      <h2 id="compartir-titulo">Share your recipe</h2>
+    <section id="compartir" className="compartir" aria-labelledby="compartir-titulo" hidden={!abierto}>
+      <h3 id="compartir-titulo">Share your recipe</h3>
       <p className="nota">
         Fields marked <span aria-hidden="true">*</span>
         <span className="solo-lector">with an asterisk</span> are required.
@@ -244,6 +252,9 @@ export function FormularioReceta() {
           </button>
           <button type="button" className="secundario" onClick={limpiar}>
             Clear form
+          </button>
+          <button type="button" className="enlace" onClick={onCerrar}>
+            Cancel
           </button>
         </div>
 

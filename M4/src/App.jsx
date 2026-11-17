@@ -9,7 +9,7 @@ import { FiltroCategoria } from './components/FiltroCategoria';
 import { ListaRecetas } from './components/ListaRecetas';
 import { DetalleReceta } from './components/DetalleReceta';
 import { BotonTema } from './components/BotonTema';
-import { FormularioReceta } from './components/FormularioReceta';
+import { MisRecetas } from './components/MisRecetas';
 
 // Si el usuario nunca ha elegido tema, usamos el de su sistema operativo.
 const temaDelSistema = () =>
@@ -104,7 +104,7 @@ function App() {
 
       <main>
         {vista === 'mias' ? (
-          <FormularioReceta />
+          <MisRecetas />
         ) : (
           <>
             {vista === 'resultados' && cargando && <p className="estado">Loading recipes… ⏳</p>}

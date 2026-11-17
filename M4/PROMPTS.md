@@ -92,3 +92,19 @@ Cada entrada lleva la fecha, mi prompt copiado literalmente (con sus erratas), q
 - **Qué hizo:** Creó `FormularioReceta.jsx` con React Hook Form (`register`, `handleSubmit`, `zodResolver`, `defaultValues`, `noValidate`, `reset()` tras guardar, validación al salir de cada campo y `deps` entre categoría, dieta y alérgenos). Lo hizo accesible: etiquetas en todos los campos, radios y checkboxes en `fieldset`, `aria-invalid`, `aria-describedby`, errores con `role="alert"`, éxito con `role="status"`, foco al primer error y foco visible con teclado. Conectó el envío con `useMutation(crearReceta)`, que invalida `['misRecetas']`, con el botón deshabilitado solo mientras guarda. Añadió la pestaña «✍️ My recipes» y los estilos del formulario. Lint y build correctos; falta probarlo en el navegador.
 - **Archivos tocados:** `src/components/FormularioReceta.jsx` (nuevo), `src/components/Pestanas.jsx`, `src/App.jsx`, `src/App.css`, `CLAUDE.md`, `PROMPTS.md`.
 - **Cambios / rechazos:** Ninguno. La IA adelantó el `useMutation` del paso 5 a este paso porque el formulario lo necesita para saber si está enviando y para enseñar el éxito o el error.
+
+## 12. Listado «My recipes»
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > todo guay, vamos con lo siguiente, paro el api y el dev?
+- **Qué hizo:** Explicó que no hace falta parar `npm run api` ni `npm run dev`, porque los dos recogen los cambios solos. Avisó de que la receta de prueba de `db.json` lleva un email real que hay que cambiar antes del commit. Creó `ListaMisRecetas.jsx` con `useQuery(['misRecetas'])`, que ordena con `select` las más nuevas primero, y con estados de carga, error con «Try again», vacío y un aviso «Updating…» que se ve justo después de guardar por la invalidación. Hizo una tarjeta propia con dificultad, tiempo, raciones, sello de dieta, alérgenos como etiquetas, e ingredientes e instrucciones desplegables. La imagen solo se pinta si la URL es http(s) y el email no se muestra. Lo puso debajo del formulario y le dio estilos. Lint y build correctos.
+- **Archivos tocados:** `src/components/ListaMisRecetas.jsx` (nuevo), `src/App.jsx`, `src/App.css`, `CLAUDE.md`, `PROMPTS.md`.
+- **Cambios / rechazos:** Ninguno. La IA decidió no reutilizar `TarjetaReceta` ni `DetalleReceta` (pensados para TheMealDB) y hacer una tarjeta propia, y explicó por qué.
+
+## 13. Formulario desplegable con «+ Add recipe»
+- **Fecha:** 2026-11-17
+- **Prompt:**
+  > vale, quiero que en my recipis aparezcan las recetas como ahora, pero el form se despliegue conn un boto de "+ add recipy"
+- **Qué hizo:** Creó `MisRecetas.jsx`, que guarda si el formulario está abierto y pone el botón «+ Add recipe» (cambia a «✕ Close form») en la cabecera del listado. Las recetas siguen siempre a la vista y el formulario se despliega entre la cabecera y la lista. Cuidó la usabilidad: el formulario se oculta en vez de borrarse, así que no se pierde lo escrito; al abrirlo el foco va a «Recipe name» y al cerrarlo vuelve al botón; el botón usa `aria-expanded`. Añadió un botón «Cancel» dentro del formulario, pasó su título a `h3` y añadió los estilos. Lint y build correctos.
+- **Archivos tocados:** `src/components/MisRecetas.jsx` (nuevo), `src/components/ListaMisRecetas.jsx`, `src/components/FormularioReceta.jsx`, `src/App.jsx`, `src/App.css`, `CLAUDE.md`, `PROMPTS.md`.
+- **Cambios / rechazos:** **Cambié** el diseño del paso 4, en el que el formulario estaba siempre visible encima del listado.
