@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.next/
+.env*
+.claude/
+/M2/
+/M3/
+/M4/
+Claude outputs/
